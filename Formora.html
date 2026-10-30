@@ -46,11 +46,20 @@
     .content { display: grid; gap: 14px; min-width: 0; }
     .section { scroll-margin-top: 16px; padding: 20px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); }
     .section h2 { margin: 0; font: 600 20px Georgia, serif; }
+    .section-heading-row { display: flex; justify-content: space-between; align-items: end; gap: 12px; margin-bottom: 5px; }
+    .section-heading-row .field { flex: 0 1 260px; }
     .hint { margin: 5px 0 18px; color: var(--muted); font-size: 12px; }
     .fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
     .field { display: flex; flex-direction: column; gap: 5px; min-width: 0; color: #334947; font-size: 12px; font-weight: 650; }
     .field.wide { grid-column: span 2; }
     .field.full { grid-column: 1 / -1; }
+    .inline-radios { display: flex; align-items: center; gap: 14px; min-height: 38px; }
+    .inline-radios label { display: flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 400; }
+    .inline-radios input[type="radio"] { width: 16px; min-height: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--focus); }
+    .field-help { color: var(--muted); font-size: 11px; font-weight: 400; }
+    .height-parts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .height-parts label { display: flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 400; }
+    .height-parts input { min-width: 0; }
     input, select, textarea { width: 100%; min-height: 38px; padding: 8px 9px; border: 1px solid #b9c9c4; border-radius: 3px; background: white; color: var(--ink); font-size: 14px; font-weight: 400; }
     textarea { min-height: 78px; resize: vertical; }
     input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
@@ -66,6 +75,10 @@
     th { color: #405b57; background: #f0f5f2; }
     td:first-child { min-width: 170px; font-weight: 650; }
     td input, td select { min-width: 110px; min-height: 34px; padding: 6px; }
+    .condition-complications td:first-child { padding-left: 22px; font-weight: 400; }
+    .present-options { display: flex; align-items: center; gap: 10px; }
+    .present-options label { display: flex; align-items: center; gap: 4px; font-weight: 400; white-space: nowrap; }
+    .present-options input[type="radio"] { width: 16px; min-width: 16px; min-height: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--focus); }
     .checkline { display: flex; align-items: center; gap: 9px; margin: 4px 0 14px; font-size: 14px; font-weight: 650; }
     .checkline input { width: 18px; min-height: 18px; height: 18px; margin: 0; accent-color: var(--focus); }
     .validation { color: #a23826; font-size: 13px; }
@@ -81,6 +94,8 @@
     @media (max-width: 520px) {
       .shell { padding: 10px; }
       .masthead { align-items: start; flex-direction: column; gap: 10px; }
+      .section-heading-row { align-items: stretch; flex-direction: column; }
+      .section-heading-row .field { flex-basis: auto; }
       h1 { font-size: 26px; }
       .fields { grid-template-columns: 1fr; }
       .field.wide { grid-column: auto; }
@@ -100,13 +115,14 @@
           <p>Life insurance intake</p>
         </div>
       </div>
-      <div class="status" id="status" role="status" aria-live="polite">Ready for a new application</div>
+      <div class="status" id="status" role="status" aria-live="polite">Quickly add and save client info during calls.</div>
     </header>
 
     <div class="toolbar" aria-label="Application actions">
       <button class="primary" id="newApplication" type="button">New Application</button>
       <button id="openPdf" type="button">Edit Existing PDF</button>
       <button class="primary" id="savePdf" type="button">Save &amp; Download PDF</button>
+      <button id="resetApplication" type="button">Reset</button>
       <input id="pdfFile" type="file" accept="application/pdf" hidden>
     </div>
 
@@ -114,9 +130,9 @@
       <div class="layout">
         <nav aria-label="Form sections">
           <a href="#client">Client</a>
+          <a href="#health">Health</a>
           <a href="#beneficiaries">Beneficiaries</a>
           <a href="#coverage">Coverage</a>
-          <a href="#health">Health</a>
           <a href="#finances">Financial</a>
           <a href="#policy">Application</a>
           <a href="#additional">Additional insured</a>
@@ -124,29 +140,57 @@
 
         <div class="content">
           <section class="section" id="client">
-            <h2>Client information</h2>
-            <p class="hint">Start with identity and callback details.</p>
+            <div class="section-heading-row">
+              <h2>Client information</h2>
+              <label class="field">Call Status<select name="callStatus"><option value="">Select call status</option><option>Application Submitted</option><option>Contacted</option><option>Follow Up</option><option>New Lead</option><option>No Sale</option><option>Quoted</option><option>Refund Request</option></select></label>
+            </div>
             <div class="fields">
               <label class="field">First name<input name="firstName" autocomplete="given-name"></label>
               <label class="field">Middle name<input name="middleName"></label>
               <label class="field">Last name<input name="lastName" autocomplete="family-name"></label>
               <label class="field">Date of birth<input name="dateOfBirth" id="dateOfBirth" type="date" autocomplete="bday"></label>
               <label class="field">Age<input name="age" id="age" readonly aria-label="Calculated age"></label>
-              <label class="field">Sex / gender for quoting<select name="sexForQuoting"><option value="">Select</option><option>Female</option><option>Male</option><option>Other</option><option>Prefer not to say</option></select></label>
-              <label class="field">Resident state<input name="residentState" autocomplete="address-level1"></label>
-              <label class="field">State of birth<input name="birthState"></label>
-              <label class="field">Height<input name="height" placeholder="5 ft 8 in"></label>
+              <div class="field"><span>Gender</span><div class="inline-radios" role="radiogroup" aria-label="Gender"><label><input name="sexForQuoting" type="radio" value="Male"> Male</label><label><input name="sexForQuoting" type="radio" value="Female"> Female</label></div></div>
+              <label class="field">Resident state<select name="residentState" data-us-state autocomplete="address-level1"><option value="">Select a state</option></select></label>
+              <label class="field">State of birth<select name="birthState" data-us-state><option value="">Select a state</option></select></label>
+              <div class="field"><span>Height</span><div class="height-parts"><label>ft<input name="heightFeet" type="number" min="0" max="8" step="1" aria-label="Height in feet"></label><label>in<input name="heightInches" type="number" min="0" max="11" step="1" aria-label="Height in inches"></label></div></div>
               <label class="field">Weight (lb)<input name="weight" type="number" min="0" step="1"></label>
               <label class="field">Primary phone<input name="phonePrimary" type="tel" autocomplete="tel"></label>
-              <label class="field">Can receive texts?<select name="canReceiveTexts"><option value="">Select</option><option>Yes</option><option>No</option></select></label>
+              <div class="field"><span>Can receive texts?</span><div class="inline-radios" role="radiogroup" aria-label="Can receive texts?"><label><input name="canReceiveTexts" type="radio" value="Yes"> Yes</label><label><input name="canReceiveTexts" type="radio" value="No"> No</label></div></div>
               <label class="field">Secondary phone<input name="phoneSecondary" type="tel"></label>
-              <label class="field">Email<input name="email" type="email" autocomplete="email"></label>
+              <label class="field wide">Email<input name="email" type="email" autocomplete="email"></label>
               <label class="field">Marital status<select name="maritalStatus"><option value="">Select</option><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option><option>Separated</option></select></label>
               <label class="field wide">Physical street address<input name="streetAddress" autocomplete="street-address"></label>
               <label class="field">City<input name="city" autocomplete="address-level2"></label>
               <label class="field">State<input name="mailingState" autocomplete="address-level1"></label>
               <label class="field">ZIP code<input name="zipCode" autocomplete="postal-code"></label>
             </div>
+          </section>
+
+          <section class="section" id="health">
+            <h2>Health and underwriting</h2>
+            <p class="hint">Record concise answers and add diagnosis or treatment details where relevant.</p>
+            <div class="fields">
+              <div class="field"><span>Tobacco or nicotine use?</span><div class="inline-radios" role="radiogroup" aria-label="Tobacco or nicotine use?"><label><input name="tobaccoUse" type="radio" value="Yes"> Yes</label><label><input name="tobaccoUse" type="radio" value="No"> No</label></div></div>
+              <label class="field wide">Type and last use<input name="tobaccoDetails" placeholder="Cigarettes, vape, chewing tobacco, etc."></label>
+              <label class="field">Hospitalization within last 12 months?<select name="hospitalizationCount" aria-describedby="hospitalizationHelp"><option value="">Select</option><option value="0">0</option><option value="1">1</option><option value="2+">2 or more</option></select><small class="field-help" id="hospitalizationHelp">Times hospitalized overnight</small></label>
+              <input name="recentHospitalization" type="hidden">
+              <div class="field"><span>Nursing home, Home Health or Psychiatric facility?</span><div class="inline-radios" role="radiogroup" aria-label="Nursing home, Home Health or Psychiatric facility?"><label><input name="careFacility" type="radio" value="Yes"> Yes</label><label><input name="careFacility" type="radio" value="No"> No</label></div></div>
+              <label class="field">Mobility assistance needed?<select name="mobilityAssistance"><option value="">Select</option><option>None</option><option>ADL assistance</option><option>Walker</option><option>Wheelchair</option></select></label>
+              <input name="legacyMobilityAssistance" type="hidden">
+              <label class="field">Felony or DUI within last 5 years?<select name="legalHistory"><option value="">Select</option><option>No</option><option>Felony</option><option>DUI</option></select></label>
+            </div>
+            <input name="underwritingDetails" type="hidden">
+            <div class="subhead">Medical conditions</div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Condition</th><th>Present?</th><th>Diagnosis date</th><th>Treatment / details</th></tr></thead>
+                <tbody id="conditionList"></tbody>
+              </table>
+            </div>
+            <div class="subhead">Prescription medications</div>
+            <div class="repeat-list" id="medicationList"></div>
+            <button type="button" id="addMedication" style="margin-top: 10px">Add medication</button>
           </section>
 
           <section class="section" id="beneficiaries">
@@ -158,45 +202,21 @@
 
           <section class="section" id="coverage">
             <h2>Coverage needs</h2>
-            <p class="hint">Capture current coverage, budget, and the quote being considered.</p>
+            <p class="hint">Capture current coverage, desired amount, and the quote being considered.</p>
             <div class="fields">
               <label class="field">Insurance type<select name="insuranceType"><option value="">Select</option><option>Final expense</option><option>Whole life</option><option>Term life</option><option>Other</option></select></label>
               <label class="field">Desired coverage amount ($)<input name="desiredCoverage" type="number" min="0" step="0.01"></label>
-              <label class="field">Monthly budget ($)<input name="monthlyBudget" type="number" min="0" step="0.01"></label>
+              <input name="monthlyBudget" type="hidden">
               <label class="field">Burial or cremation preference<select name="finalArrangement"><option value="">Select</option><option>Burial</option><option>Cremation</option><option>Undecided</option></select></label>
               <label class="field">Existing life insurance?<select name="hasExistingCoverage"><option value="">Select</option><option>No</option><option>Yes</option></select></label>
               <label class="field">Existing carrier<input name="existingCarrier"></label>
               <label class="field">Existing coverage amount ($)<input name="existingCoverageAmount" type="number" min="0" step="0.01"></label>
               <label class="field">Existing premium ($/month)<input name="existingPremium" type="number" min="0" step="0.01"></label>
-              <label class="field">Existing policy effective date<input name="existingEffectiveDate" type="date"></label>
+              <label class="field">Existing policy effective year<input name="existingEffectiveDate" type="number" min="1900" max="2100" step="1" placeholder="YYYY"></label>
               <label class="field">Replacement consideration<select name="replacementConsideration"><option value="">Select</option><option>No</option><option>Yes</option><option>Undecided</option></select></label>
               <label class="field">Quoted coverage amount ($)<input name="quotedCoverage" type="number" min="0" step="0.01"></label>
               <label class="field">Quoted monthly premium ($)<input name="quotedPremium" type="number" min="0" step="0.01"></label>
             </div>
-          </section>
-
-          <section class="section" id="health">
-            <h2>Health and underwriting</h2>
-            <p class="hint">Record concise answers and add diagnosis or treatment details where relevant.</p>
-            <div class="fields">
-              <label class="field">Tobacco or nicotine use?<select name="tobaccoUse"><option value="">Select</option><option>No</option><option>Yes</option></select></label>
-              <label class="field wide">Type and last use<input name="tobaccoDetails" placeholder="Cigarettes, vape, chewing tobacco, etc."></label>
-              <label class="field">Recent hospitalization?<select name="recentHospitalization"><option value="">Select</option><option>No</option><option>Yes</option></select></label>
-              <label class="field">Assisted living, nursing home, hospice, or home healthcare?<select name="careFacility"><option value="">Select</option><option>No</option><option>Yes</option></select></label>
-              <label class="field">Mobility assistance needed?<select name="mobilityAssistance"><option value="">Select</option><option>No</option><option>Yes</option></select></label>
-              <label class="field">Relevant legal history?<select name="legalHistory"><option value="">Select</option><option>No</option><option>Yes</option></select></label>
-              <label class="field full">Care, hospitalization, or legal details<textarea name="underwritingDetails"></textarea></label>
-            </div>
-            <div class="subhead">Medical conditions</div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Condition</th><th>Present?</th><th>Diagnosis date</th><th>Treatment / details</th></tr></thead>
-                <tbody id="conditionList"></tbody>
-              </table>
-            </div>
-            <div class="subhead">Prescription medications</div>
-            <div class="repeat-list" id="medicationList"></div>
-            <button type="button" id="addMedication" style="margin-top: 10px">Add medication</button>
           </section>
 
           <section class="section" id="finances">
@@ -230,7 +250,7 @@
               <label class="field">Policy number<input name="policyNumber"></label>
               <label class="field">Application status<select name="applicationStatus"><option value="In progress">In progress</option><option>Quote only</option><option>Submitted</option><option>Approved</option><option>Declined / postponed</option><option>Complete</option></select></label>
               <label class="field">Agent name<input name="agentName"></label>
-              <label class="field">Application date<input name="applicationDate" type="date"></label>
+              <label class="field">Intake date<input name="applicationDate" type="date"></label>
               <label class="field full">Additional notes<textarea name="applicationNotes"></textarea></label>
             </div>
             <p class="validation" id="validationMessage" aria-live="polite"></p>
@@ -298,15 +318,16 @@
 
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
 
-      const clientFields = ['firstName', 'middleName', 'lastName', 'dateOfBirth', 'age', 'sexForQuoting', 'residentState', 'birthState', 'height', 'weight', 'phonePrimary', 'canReceiveTexts', 'phoneSecondary', 'email', 'maritalStatus', 'streetAddress', 'city', 'mailingState', 'zipCode'];
+      const clientFields = ['firstName', 'middleName', 'lastName', 'dateOfBirth', 'age', 'sexForQuoting', 'residentState', 'birthState', 'weight', 'phonePrimary', 'canReceiveTexts', 'phoneSecondary', 'email', 'maritalStatus', 'streetAddress', 'city', 'mailingState', 'zipCode', 'callStatus'];
+      const usStates = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
       const coverageFields = ['insuranceType', 'desiredCoverage', 'monthlyBudget', 'finalArrangement', 'hasExistingCoverage', 'existingCarrier', 'existingCoverageAmount', 'existingPremium', 'existingEffectiveDate', 'replacementConsideration', 'quotedCoverage', 'quotedPremium'];
-      const healthFields = ['tobaccoUse', 'tobaccoDetails', 'recentHospitalization', 'careFacility', 'mobilityAssistance', 'legalHistory', 'underwritingDetails'];
+      const healthFields = ['tobaccoUse', 'tobaccoDetails', 'recentHospitalization', 'hospitalizationCount', 'careFacility', 'mobilityAssistance', 'legalHistory', 'underwritingDetails'];
       const financeFields = ['employmentStatus', 'incomeSource', 'monthlyIncome', 'bankName', 'accountType', 'draftDate', 'paymentFrequency', 'initialPaymentDate', 'bankAvailable', 'alternatePaymentMethod', 'payeeInvolved', 'paymentDetails'];
       const policyFields = ['carrier', 'productName', 'policyCoverage', 'policyPremium', 'effectiveDate', 'policyNumber', 'applicationStatus', 'agentName', 'applicationDate', 'applicationNotes'];
       const additionalFields = ['additionalName', 'additionalDob', 'additionalSex', 'additionalHeight', 'additionalWeight', 'additionalTobacco', 'additionalHealthNotes'];
       const conditions = [
-        'Heart attack, stroke, or blood clot', 'Heart disease or heart failure', 'Cancer', 'Diabetes or complications',
-        'COPD or respiratory condition', 'Oxygen use', 'Kidney or liver condition', 'Mental health condition',
+        'Heart attack, stroke, or blood clot', 'Heart disease or heart failure', 'Cancer', 'Diabetes',
+        'Lung disease (asthma/COPD/Emphysema)', 'Oxygen use', 'Kidney or liver condition', 'Mental health condition',
         'Dementia or memory disorder', 'Alcohol or drug abuse', 'Organ transplant', 'Other significant condition',
       ];
 
@@ -322,12 +343,20 @@
 
       function buildConditionRows() {
         const body = document.getElementById('conditionList');
-        for (const condition of conditions) {
+        for (const [index, condition] of conditions.entries()) {
           const row = document.createElement('tr');
+          row.className = 'condition-row';
           row.dataset.condition = condition;
-          row.innerHTML = '<td></td><td><select data-field="present"><option value="">Select</option><option>No</option><option>Yes</option></select></td><td><input data-field="diagnosisDate" placeholder="Date or year"></td><td><input data-field="details" placeholder="Treatment or details"></td>';
+          const presentName = `condition-present-${index}`;
+          row.innerHTML = `<td></td><td><div class="present-options" role="radiogroup" aria-label="Present? ${condition}"><label><input type="radio" name="${presentName}" data-field="present" value="Yes"> Yes</label><label><input type="radio" name="${presentName}" data-field="present" value="No"> No</label></div></td><td><input data-field="diagnosisDate" placeholder="Date or year"></td><td><input data-field="details" placeholder="Treatment or details"></td>`;
           row.cells[0].textContent = condition;
           body.append(row);
+          if (condition === 'Diabetes') {
+            const complicationsRow = document.createElement('tr');
+            complicationsRow.className = 'condition-complications';
+            complicationsRow.innerHTML = '<td>Complications?</td><td></td><td><select data-field="diabetesComplication" aria-label="Diabetes complication"><option value="">Select</option><option>Retinopathy</option><option>Neuropathy</option><option>Nephropathy</option><option>Amputation</option></select></td><td></td>';
+            body.append(complicationsRow);
+          }
         }
       }
 
@@ -348,6 +377,24 @@
         return Object.fromEntries(names.map(name => [name, form.elements.namedItem(name).value]));
       }
 
+      function buildStateOptions() {
+        for (const select of document.querySelectorAll('[data-us-state]')) {
+          for (const state of usStates) select.add(new Option(state, state));
+        }
+      }
+
+      function formatHeight() {
+        const feet = form.elements.namedItem('heightFeet').value;
+        const inches = form.elements.namedItem('heightInches').value;
+        return [feet === '' ? '' : `${feet}'`, inches === '' ? '' : `${inches}"`].filter(Boolean).join(' ');
+      }
+
+      function restoreHeight(value) {
+        const match = String(value || '').match(/^\s*(\d+)\s*(?:ft|feet|')?\s*(?:(\d+)\s*(?:in|inches|"))?\s*$/i);
+        form.elements.namedItem('heightFeet').value = match?.[1] || '';
+        form.elements.namedItem('heightInches').value = match?.[2] || '';
+      }
+
       function repeatValues(container, names) {
         return [...container.querySelectorAll('.repeat-row')].map(row => Object.fromEntries(
           names.map(name => [name, row.querySelector(`[data-name="${name}"]`).value]),
@@ -356,19 +403,28 @@
 
       function collectApplication() {
         const additionalEnabled = document.getElementById('additionalEnabled').checked;
+        const client = fieldValues(clientFields);
+        client.height = formatHeight();
+        const healthResponses = fieldValues(healthFields);
+        if (!healthResponses.mobilityAssistance) healthResponses.mobilityAssistance = form.elements.namedItem('legacyMobilityAssistance').value;
         return {
           schemaVersion,
-          client: fieldValues(clientFields),
+          client,
           beneficiaries: repeatValues(beneficiaryList, ['fullName', 'relationship', 'dateOfBirth', 'designation', 'allocation']),
           coverage: fieldValues(coverageFields),
           health: {
-            responses: fieldValues(healthFields),
-            conditions: [...document.querySelectorAll('#conditionList tr')].map(row => ({
-              condition: row.dataset.condition,
-              present: row.querySelector('[data-field="present"]').value,
-              diagnosisDate: row.querySelector('[data-field="diagnosisDate"]').value,
-              details: row.querySelector('[data-field="details"]').value,
-            })),
+            responses: healthResponses,
+            diabetesComplication: document.querySelector('#conditionList .condition-complications [data-field="diabetesComplication"]').value,
+            conditions: [...document.querySelectorAll('#conditionList .condition-row')].map(row => {
+              const condition = {
+                condition: row.dataset.condition,
+                present: row.querySelector('[data-field="present"]:checked')?.value || '',
+                diagnosisDate: row.querySelector('[data-field="diagnosisDate"]').value,
+                details: row.querySelector('[data-field="details"]').value,
+              };
+              if (row.dataset.condition === 'Diabetes') condition.complication = document.querySelector('#conditionList .condition-complications [data-field="diabetesComplication"]').value;
+              return condition;
+            }),
             medications: repeatValues(medicationList, ['name', 'reason', 'details']),
           },
           finances: fieldValues(financeFields),
@@ -383,14 +439,32 @@
       function restoreFields(names, values = {}) {
         for (const name of names) {
           const field = form.elements.namedItem(name);
-          if (field) field.value = values[name] ?? '';
+          if (field instanceof RadioNodeList) {
+            for (const option of field) option.checked = option.value === (values[name] ?? '');
+          } else if (field) {
+            field.value = values[name] ?? '';
+          }
         }
       }
 
       function restoreApplication(data) {
         restoreFields(clientFields, data.client);
+        restoreHeight(data.client?.height);
         restoreFields(coverageFields, data.coverage);
+        const existingPolicyYear = String(data.coverage?.existingEffectiveDate || '').match(/^(\d{4})/);
+        if (existingPolicyYear) form.elements.namedItem('existingEffectiveDate').value = existingPolicyYear[1];
         restoreFields(healthFields, data.health?.responses);
+        const savedMobility = data.health?.responses?.mobilityAssistance || '';
+        form.elements.namedItem('legacyMobilityAssistance').value = '';
+        if (savedMobility === 'No') {
+          form.elements.namedItem('mobilityAssistance').value = 'None';
+        } else if (savedMobility === 'Yes') {
+          form.elements.namedItem('mobilityAssistance').value = '';
+          form.elements.namedItem('legacyMobilityAssistance').value = 'Yes';
+        }
+        if (!data.health?.responses?.hospitalizationCount && data.health?.responses?.recentHospitalization === 'No') {
+          form.elements.namedItem('hospitalizationCount').value = '0';
+        }
         restoreFields(financeFields, data.finances);
         restoreFields(policyFields, data.application);
 
@@ -399,13 +473,14 @@
         medicationList.replaceChildren();
         for (const medication of data.health?.medications || []) addRepeatRow('medication', medication);
 
-        const conditionValues = new Map((data.health?.conditions || []).map(item => [item.condition, item]));
-        for (const row of document.querySelectorAll('#conditionList tr')) {
+          const conditionValues = new Map((data.health?.conditions || []).map(item => [item.condition === 'COPD or respiratory condition' || item.condition === 'Lung disease (asthma/COPD only)' ? 'Lung disease (asthma/COPD/Emphysema)' : item.condition === 'Diabetes or complications' ? 'Diabetes' : item.condition, item]));
+        for (const row of document.querySelectorAll('#conditionList .condition-row')) {
           const item = conditionValues.get(row.dataset.condition) || {};
-          row.querySelector('[data-field="present"]').value = item.present || '';
+          for (const input of row.querySelectorAll('[data-field="present"]')) input.checked = input.value === item.present;
           row.querySelector('[data-field="diagnosisDate"]').value = item.diagnosisDate || '';
           row.querySelector('[data-field="details"]').value = item.details || '';
         }
+        document.querySelector('#conditionList .condition-complications [data-field="diabetesComplication"]').value = data.health?.diabetesComplication || conditionValues.get('Diabetes')?.complication || '';
 
         const additionalEnabled = Boolean(data.additionalInsured?.enabled);
         document.getElementById('additionalEnabled').checked = additionalEnabled;
@@ -482,38 +557,214 @@
         const pdf = await PDFLib.PDFDocument.create();
         const font = await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
         const boldFont = await pdf.embedFont(PDFLib.StandardFonts.HelveticaBold);
-        const lines = flattenForPdf({
-          'Client information': data.client,
-          'Beneficiaries': data.beneficiaries,
-          'Coverage needs': data.coverage,
-          'Health and underwriting': data.health,
-          'Financial and payment': data.finances,
-          'Application details': data.application,
-          'Additional insured': data.additionalInsured.enabled ? data.additionalInsured.details : 'Not included',
-        });
-        let page;
-        let y;
-        const margin = 52;
-        const maxWidth = 612 - margin * 2;
-        const addPage = () => {
-          page = pdf.addPage([612, 792]);
-          y = 740;
-          page.drawText('Formora | Insurance Intake', { x: margin, y, size: 19, font: boldFont });
-          y -= 28;
+        const logoElement = document.querySelector('.brand-mark');
+        if (!logoElement?.complete || !logoElement.naturalWidth) throw new Error('Formora logo could not be loaded.');
+        const logoCanvas = document.createElement('canvas');
+        logoCanvas.width = 84;
+        logoCanvas.height = 84;
+        logoCanvas.getContext('2d').drawImage(logoElement, 0, 0, 84, 84);
+        const logoData = logoCanvas.toDataURL('image/png').split(',')[1];
+        const logoBytes = Uint8Array.from(atob(logoData), character => character.charCodeAt(0));
+        const logoImage = await pdf.embedPng(logoBytes);
+        const pageWidth = 612;
+        const pageHeight = 792;
+        const margin = 28;
+        const contentWidth = pageWidth - margin * 2;
+        const border = PDFLib.rgb(0.35, 0.39, 0.42);
+        const bandFill = PDFLib.rgb(0.204, 0.227, 0.251);
+        const headerFill = PDFLib.rgb(0.88, 0.91, 0.97);
+        const rowFill = PDFLib.rgb(0.95, 0.96, 0.99);
+        const plainFill = PDFLib.rgb(1, 1, 1);
+        const display = value => value === undefined || value === null || String(value).trim() === '' ? 'Not provided' : String(value);
+        const ageFrom = dob => {
+          if (!dob) return '';
+          const birth = new Date(`${dob}T12:00:00`);
+          const today = new Date();
+          let age = today.getFullYear() - birth.getFullYear();
+          if (today.getMonth() < birth.getMonth() || (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())) age--;
+          return age >= 0 ? String(age) : '';
         };
-        addPage();
-        for (const line of lines) {
-          const isSection = !line.includes(':');
-          const size = isSection ? 12 : 9;
-          const fontForLine = isSection ? boldFont : font;
-          const wrapped = wrapText(line, fontForLine, size, maxWidth);
-          if (isSection) y -= 8;
-          for (const part of wrapped) {
-            if (y < margin + 18) addPage();
-            page.drawText(part, { x: margin, y, size, font: fontForLine, maxWidth });
-            y -= isSection ? 17 : 13;
-          }
+
+        function drawPageHeader(page, label, name, appDate, callStatus) {
+          page.drawImage(logoImage, { x: margin, y: pageHeight - 53, width: 27, height: 27 });
+          page.drawText('FORMORA | MEDICAL INFO SHEET', { x: margin + 34, y: pageHeight - 28, size: 14, font: boldFont, color: bandFill });
+          page.drawText(`${label} | ${display(name)}`, { x: margin + 34, y: pageHeight - 44, size: 9, font: boldFont, color: border });
+          const callStatusText = `Call Status: ${display(callStatus)}`;
+          const callStatusFontSize = 8.5;
+          page.drawText(callStatusText, { x: pageWidth - margin - boldFont.widthOfTextAtSize(callStatusText, callStatusFontSize), y: pageHeight - 28, size: callStatusFontSize, font: boldFont, color: PDFLib.rgb(0.72, 0.12, 0.15) });
+          const intakeDateText = `Intake date: ${display(appDate)}`;
+          page.drawText(intakeDateText, { x: pageWidth - margin - font.widthOfTextAtSize(intakeDateText, 7.5), y: pageHeight - 44, size: 7.5, font, color: border });
         }
+
+        function drawSection(page, top, title) {
+          const height = 17;
+          page.drawRectangle({ x: margin, y: pageHeight - top - height, width: contentWidth, height, color: bandFill, borderColor: border, borderWidth: 0.4 });
+          page.drawText(title.toUpperCase(), { x: margin + 5, y: pageHeight - top - 12, size: 7.5, font: boldFont, color: plainFill });
+          return top + height;
+        }
+
+        function drawField(page, x, top, width, height, label, value, fill = rowFill) {
+          const bottom = pageHeight - top - height;
+          page.drawRectangle({ x, y: bottom, width, height, color: fill, borderColor: border, borderWidth: 0.35 });
+          page.drawText(label, { x: x + 4, y: bottom + height - 8, size: 5.8, font: boldFont, color: border });
+          const lines = wrapText(display(value), font, 7.2, width - 8);
+          const maxLines = Math.max(1, Math.floor((height - 13) / 8));
+          const shown = lines.slice(0, maxLines);
+          if (lines.length > maxLines && shown.length) shown[shown.length - 1] = `${shown[shown.length - 1].slice(0, Math.max(1, shown[shown.length - 1].length - 3))}...`;
+          shown.forEach((line, index) => page.drawText(line, { x: x + 4, y: bottom + height - 17 - index * 8, size: 7.2, font, color: border, maxWidth: width - 8 }));
+        }
+
+        function drawFieldRow(page, top, fields, height = 20) {
+          let x = margin;
+          for (const [label, value, width] of fields) {
+            drawField(page, x, top, width, height, label, value);
+            x += width;
+          }
+          return top + height;
+        }
+
+        function drawTable(page, top, headers, rows, widths) {
+          const headerHeight = 18;
+          let x = margin;
+          headers.forEach((header, index) => {
+            const width = widths[index];
+            const bottom = pageHeight - top - headerHeight;
+            page.drawRectangle({ x, y: bottom, width, height: headerHeight, color: headerFill, borderColor: border, borderWidth: 0.35 });
+            wrapText(header, boldFont, 5.8, width - 6).slice(0, 2).forEach((line, lineIndex) => page.drawText(line, { x: x + 3, y: bottom + headerHeight - 7 - lineIndex * 6, size: 5.8, font: boldFont, color: border, maxWidth: width - 6 }));
+            x += width;
+          });
+          top += headerHeight;
+          rows.forEach((row, rowIndex) => {
+            const cellLines = row.map((value, index) => value === '' || value === null || value === undefined ? [] : wrapText(String(value), font, 6.5, widths[index] - 6));
+            const maxLines = Math.max(1, ...cellLines.map(lines => lines.length));
+            const rowHeight = Math.max(17, Math.min(31, maxLines * 7 + 6));
+            let cellX = margin;
+            row.forEach((value, index) => {
+              const width = widths[index];
+              const bottom = pageHeight - top - rowHeight;
+              page.drawRectangle({ x: cellX, y: bottom, width, height: rowHeight, color: rowIndex % 2 ? plainFill : rowFill, borderColor: border, borderWidth: 0.35 });
+              const lines = cellLines[index].slice(0, Math.floor((rowHeight - 5) / 7));
+              lines.forEach((line, lineIndex) => page.drawText(line, { x: cellX + 3, y: bottom + rowHeight - 8 - lineIndex * 7, size: 6.5, font, color: border, maxWidth: width - 6 }));
+              cellX += width;
+            });
+            top += rowHeight;
+          });
+          return top;
+        }
+
+        function beneficiarySummary() {
+          return (data.beneficiaries || []).filter(item => item.fullName).map(item => {
+            const relationship = item.relationship ? `, ${item.relationship}` : '';
+            const designation = item.designation ? ` - ${item.designation}` : '';
+            const allocation = item.allocation ? ` (${item.allocation}%)` : '';
+            return `${item.fullName}${relationship}${designation}${allocation}`;
+          }).join('; ') || 'Not provided';
+        }
+
+        function drawBeneficiary(page, top) {
+          top = drawSection(page, top, 'Beneficiary');
+          return drawFieldRow(page, top, [['Beneficiary', beneficiarySummary(), contentWidth]], 25);
+        }
+
+        function drawConditions(page, top, health) {
+          top = drawSection(page, top, 'Medical conditions');
+          const byCondition = new Map((health.conditions || []).map(item => [item.condition === 'COPD or respiratory condition' || item.condition === 'Lung disease (asthma/COPD only)' ? 'Lung disease (asthma/COPD/Emphysema)' : item.condition === 'Diabetes or complications' ? 'Diabetes' : item.condition, item]));
+          const rows = [];
+          for (const name of conditions) {
+            const item = byCondition.get(name) || {};
+            rows.push([name, item.present === 'Yes' ? 'X' : '', item.present === 'No' ? 'X' : '', item.diagnosisDate || '', item.details || '']);
+            if (name === 'Diabetes') rows.push(['Complications?', '', '', item.complication || '', '']);
+          }
+          return drawTable(page, top, ['Condition', 'Yes', 'No', 'Diagnosis date', 'Treatment / details'], rows, [132, 30, 30, 76, 288]);
+        }
+
+        function drawMedicationGrid(page, top, medications) {
+          top = drawSection(page, top, 'Medications');
+          const columns = 4;
+          const rows = 3;
+          const cellWidth = contentWidth / columns;
+          const cellHeight = 32;
+          for (let index = 0; index < columns * rows; index++) {
+            const medication = medications[index];
+            const x = margin + (index % columns) * cellWidth;
+            const cellTop = top + Math.floor(index / columns) * cellHeight;
+            const bottom = pageHeight - cellTop - cellHeight;
+            page.drawRectangle({ x, y: bottom, width: cellWidth, height: cellHeight, color: index % 2 ? plainFill : rowFill, borderColor: border, borderWidth: 0.35 });
+            if (!medication) continue;
+            const text = [
+              medication.name,
+              medication.reason ? `Reason: ${medication.reason}` : '',
+              medication.details ? `Dose / details: ${medication.details}` : '',
+            ].filter(Boolean).join(' | ');
+            const lines = wrapText(text, font, 5.8, cellWidth - 8);
+            const maxLines = Math.floor((cellHeight - 4) / 6.5);
+            const shown = lines.slice(0, maxLines);
+            if (lines.length > maxLines && shown.length) shown[shown.length - 1] = `${shown[shown.length - 1].slice(0, Math.max(1, shown[shown.length - 1].length - 3))}...`;
+            shown.forEach((line, lineIndex) => page.drawText(line, { x: x + 4, y: bottom + cellHeight - 8 - lineIndex * 6.5, size: 5.8, font, color: border, maxWidth: cellWidth - 8 }));
+          }
+          return top + rows * cellHeight;
+        }
+
+        function drawInsuredPage(client, health, pageLabel, additionalInsured = false) {
+          const responses = health.responses || {};
+          const finances = data.finances || {};
+          const coverage = data.coverage || {};
+          const application = data.application || {};
+          const page = pdf.addPage([pageWidth, pageHeight]);
+          const name = [client.firstName, client.middleName, client.lastName].filter(Boolean).join(' ');
+          drawPageHeader(page, pageLabel, name, application.applicationDate, client.callStatus);
+          let top = 52;
+          top = drawSection(page, top, 'Client information');
+          top = drawFieldRow(page, top, [['Full name', name, 190], ['Date of birth', client.dateOfBirth, 78], ['Age', client.age, 42], ['Gender', client.sexForQuoting, 68], ['Height', client.height, 78], ['Weight (lb)', client.weight, 100]]);
+          top = drawFieldRow(page, top, [['Primary phone', client.phonePrimary, 116], ['Secondary phone', client.phoneSecondary, 116], ['Email', client.email, 228], ['Can receive texts?', client.canReceiveTexts, 96]]);
+          top = drawFieldRow(page, top, [['Physical street address', client.streetAddress, 292], ['City', client.city, 102], ['State', client.mailingState, 70], ['ZIP code', client.zipCode, 92]]);
+          top = drawFieldRow(page, top, [['Resident state', client.residentState, 150], ['State of birth', client.birthState, 150], ['Marital status', client.maritalStatus, 256]]);
+          top = drawSection(page, top, 'Health and underwriting');
+          const hospitalizationCount = responses.hospitalizationCount || (responses.recentHospitalization === 'No' ? '0' : responses.recentHospitalization === 'Yes' ? 'Count not recorded' : '');
+          top = drawFieldRow(page, top, [['Tobacco / nicotine', responses.tobaccoUse, 85], ['Hospitalized overnight (last 12 months)', hospitalizationCount, 105], ['Mobility assistance', responses.mobilityAssistance, 90], ['Felony or DUI (last 5 years)', responses.legalHistory, 110], ['Nursing home / Home Health / Psychiatric facility', responses.careFacility, 166]]);
+          top = drawConditions(page, top, health);
+          top = drawMedicationGrid(page, top, health.medications || []);
+          top = drawFieldRow(page, top, [['Additional underwriting / application notes', [responses.underwritingDetails, application.applicationNotes, finances.paymentDetails].filter(Boolean).join(' | '), contentWidth]], 30);
+
+          top = drawBeneficiary(page, top);
+
+          top = drawSection(page, top, 'Coverage');
+          top = drawFieldRow(page, top, [['Insurance type', coverage.insuranceType, 130], ['Desired coverage ($)', coverage.desiredCoverage, 150], ['Final arrangement', coverage.finalArrangement, 130], ['Replacement?', coverage.replacementConsideration, 156]]);
+          top = drawFieldRow(page, top, [['Existing coverage?', coverage.hasExistingCoverage, 102], ['Existing carrier', coverage.existingCarrier, 132], ['Existing amount ($)', coverage.existingCoverageAmount, 104], ['Existing premium ($)', coverage.existingPremium, 104], ['Existing policy year', coverage.existingEffectiveDate, 114]]);
+
+          top = drawSection(page, top, 'Financial and policy details');
+          top = drawFieldRow(page, top, [['Employment status', finances.employmentStatus, 100], ['Income source', finances.incomeSource, 146], ['Monthly income ($)', finances.monthlyIncome, 104], ['Bank / credit union', finances.bankName, 126], ['Account type', finances.accountType, 80]]);
+          top = drawFieldRow(page, top, [['Payment frequency', finances.paymentFrequency, 100], ['Draft date', finances.draftDate, 72], ['Initial payment date', finances.initialPaymentDate, 112], ['Bank available?', finances.bankAvailable, 96], ['POA / payee?', finances.payeeInvolved, 88], ['Payment method', finances.alternatePaymentMethod, 88]]);
+          top = drawFieldRow(page, top, [['Carrier', application.carrier, 90], ['Product', application.productName, 100], ['Policy amount ($)', application.policyCoverage, 90], ['Premium ($)', application.policyPremium, 80], ['Effective date', application.effectiveDate, 90], ['Policy number', application.policyNumber, 106]]);
+          top = drawFieldRow(page, top, [['Application status', application.applicationStatus, 124], ['Agent name', application.agentName, 150], ['Intake date', application.applicationDate, 112], ['Quoted coverage ($)', coverage.quotedCoverage, 90], ['Quoted premium ($)', coverage.quotedPremium, 80]]);
+        }
+
+        function drawPrimaryPage() {
+          const health = data.health || { responses: {}, conditions: [], medications: [] };
+          drawInsuredPage(data.client || {}, health, 'CLIENT #1 - PRIMARY APPLICANT');
+        }
+
+        function drawAdditionalPage() {
+          const details = data.additionalInsured.details || {};
+          const client = {
+            firstName: details.additionalName || '',
+            dateOfBirth: details.additionalDob || '',
+            age: ageFrom(details.additionalDob),
+            sexForQuoting: details.additionalSex || '',
+            height: details.additionalHeight || '',
+            weight: details.additionalWeight || '',
+            callStatus: data.client?.callStatus || '',
+          };
+          const health = {
+            responses: { tobaccoUse: details.additionalTobacco || '', underwritingDetails: details.additionalHealthNotes || '' },
+            conditions: [],
+            medications: [],
+          };
+          drawInsuredPage(client, health, 'CLIENT #2 - ADDITIONAL INSURED', true);
+        }
+
+        drawPrimaryPage();
+        if (data.additionalInsured?.enabled) drawAdditionalPage();
         await pdf.attach(new TextEncoder().encode(JSON.stringify(data)), attachmentName, {
           mimeType: 'application/json',
           description: 'Editable Formora application data',
@@ -543,9 +794,9 @@
           link.href = blobUrl;
           link.download = `Formora_${clientName}_${date}.pdf`;
           link.click();
-          URL.revokeObjectURL(blobUrl);
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
           isDirty = false;
-          setStatus('PDF downloaded. The original file, if any, remains unchanged.');
+          setStatus('Quickly add and save client info during calls.');
         } catch (error) {
           setStatus(`PDF export failed: ${error.message}`);
         }
@@ -585,6 +836,12 @@
         markDirty();
       });
       document.getElementById('dateOfBirth').addEventListener('change', updateAge);
+      form.elements.namedItem('hospitalizationCount').addEventListener('change', event => {
+        form.elements.namedItem('recentHospitalization').value = event.target.value === '' ? '' : event.target.value === '0' ? 'No' : 'Yes';
+      });
+      form.elements.namedItem('mobilityAssistance').addEventListener('change', () => {
+        form.elements.namedItem('legacyMobilityAssistance').value = '';
+      });
       form.addEventListener('input', markDirty);
       form.addEventListener('change', markDirty);
       document.getElementById('additionalEnabled').addEventListener('change', event => {
@@ -592,22 +849,25 @@
         fieldset.hidden = !event.target.checked;
         fieldset.disabled = !event.target.checked;
       });
-      document.getElementById('newApplication').addEventListener('click', () => {
+      function resetApplication() {
         if (isDirty && !window.confirm('Discard unsaved changes and start a new application?')) return;
         form.reset();
         beneficiaryList.replaceChildren();
         medicationList.replaceChildren();
-        for (const row of document.querySelectorAll('#conditionList tr')) {
-          row.querySelector('[data-field="present"]').value = '';
+        for (const row of document.querySelectorAll('#conditionList .condition-row')) {
+          for (const input of row.querySelectorAll('[data-field="present"]')) input.checked = false;
           row.querySelector('[data-field="diagnosisDate"]').value = '';
           row.querySelector('[data-field="details"]').value = '';
         }
+        document.querySelector('#conditionList .condition-complications [data-field="diabetesComplication"]').value = '';
         document.getElementById('additionalFields').hidden = true;
         document.getElementById('additionalFields').disabled = true;
         validationMessage.textContent = '';
         isDirty = false;
-        setStatus('Ready for a new application');
-      });
+        setStatus('Quickly add and save client info during calls.');
+      }
+      document.getElementById('newApplication').addEventListener('click', resetApplication);
+      document.getElementById('resetApplication').addEventListener('click', resetApplication);
       document.getElementById('openPdf').addEventListener('click', () => document.getElementById('pdfFile').click());
       document.getElementById('pdfFile').addEventListener('change', event => {
         const [file] = event.target.files;
@@ -616,6 +876,7 @@
       });
       document.getElementById('savePdf').addEventListener('click', savePdf);
 
+      buildStateOptions();
       buildConditionRows();
       addRepeatRow('beneficiary', { designation: 'Primary' });
     })();
