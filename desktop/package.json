@@ -1,0 +1,21 @@
+{
+  "name": "variscribe-desktop",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "tauri": "tauri",
+    "test:pdf-encryption": "node tests/pdf-encryption-roundtrip.mjs"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "pdf-lib": "1.17.1",
+    "pdfjs-dist": "6.4.299",
+    "vite": "^7"
+  }
+}
