@@ -82,6 +82,28 @@
     .present-options input[type="radio"] { width: 16px; min-width: 16px; min-height: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--focus); }
     .checkline { display: flex; align-items: center; gap: 9px; margin: 4px 0 14px; font-size: 14px; font-weight: 650; }
     .checkline input { width: 18px; min-height: 18px; height: 18px; margin: 0; accent-color: var(--focus); }
+    .qualifier-toggle { position: relative; display: inline-flex; align-items: center; gap: 9px; min-height: 38px; margin-left: auto; padding: 5px 10px; border: 1px solid #b54b3d; border-radius: 4px; color: #842f25; background: #fff0ed; font-size: 13px; font-weight: 650; cursor: pointer; }
+    .qualifier-toggle[data-enabled="true"] { border-color: #167f72; color: #14584f; background: #e4f2ee; }
+    .qualifier-toggle input { position: absolute; width: 1px; min-height: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap; }
+    .qualifier-toggle input:focus-visible + .qualifier-track { outline: 2px solid var(--focus); outline-offset: 3px; }
+    .qualifier-track { position: relative; flex: 0 0 42px; width: 42px; height: 24px; border-radius: 12px; background: #b54b3d; transition: background-color 120ms ease; }
+    .qualifier-track::after { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: white; content: ""; transition: transform 120ms ease; }
+    .qualifier-toggle[data-enabled="true"] .qualifier-track { background: #167f72; }
+    .qualifier-toggle[data-enabled="true"] .qualifier-track::after { transform: translateX(18px); }
+    .qualifier-state { min-width: 24px; text-align: right; }
+    .qualifier-dialog { width: min(520px, calc(100vw - 32px)); max-height: min(700px, calc(100vh - 32px)); overflow: auto; padding: 22px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); background: var(--paper); }
+    .qualifier-dialog::backdrop { background: rgb(20 32 30 / 48%); }
+    .qualifier-dialog h2 { margin: 0 0 14px; font: 600 22px Georgia, serif; }
+    .qualifier-questions { border-top: 1px solid var(--line); }
+    .qualifier-question { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .qualifier-question p { margin: 0; font-size: 14px; font-weight: 650; }
+    .qualifier-question .inline-radios { gap: 10px; }
+    .qualifier-result { margin-top: 16px; padding: 16px; border: 1px solid #bd4b35; border-radius: 4px; color: #7d271d; background: #fff0ed; text-align: center; }
+    .qualifier-result[data-outcome="qualified"] { border-color: #167f72; color: #14584f; background: #e4f2ee; }
+    .qualifier-result h3 { margin: 0; font: 700 32px Georgia, serif; }
+    .qualifier-result p { margin: 6px 0 14px; font-size: 18px; font-weight: 750; }
+    .qualifier-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+    .qualifier-dialog [hidden] { display: none; }
     .validation { color: #a23826; font-size: 13px; }
     .footer { margin: 18px 0 4px; color: var(--muted); text-align: center; font-size: 11px; }
     .password-dialog { width: min(440px, calc(100vw - 32px)); padding: 22px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); background: var(--paper); }
@@ -110,6 +132,7 @@
       .field.wide { grid-column: auto; }
       .section { padding: 14px; }
       .toolbar button { flex: 1 1 44%; }
+      .qualifier-toggle { flex: 1 1 100%; justify-content: center; margin-left: 0; }
       nav a { padding: 8px; font-size: 12px; }
     }
   </style>
@@ -132,6 +155,12 @@
       <button id="openPdf" type="button">Edit Existing PDF</button>
       <button class="primary" id="savePdf" type="button">Save PDF</button>
       <button id="resetApplication" type="button">Reset</button>
+      <label class="qualifier-toggle" id="qualifierToggle" data-enabled="false">
+        <input id="callScriptQualifier" type="checkbox" role="switch" aria-controls="bufferChecklistDialog">
+        <span class="qualifier-track" aria-hidden="true"></span>
+        <span>Call script qualifier</span>
+        <span class="qualifier-state" id="qualifierState">Off</span>
+      </label>
     </div>
 
     <form id="applicationForm" novalidate>
@@ -301,6 +330,49 @@
       </div>
     </form>
   </dialog>
+  <dialog id="bufferChecklistDialog" class="qualifier-dialog" aria-labelledby="bufferChecklistTitle">
+    <h2 id="bufferChecklistTitle">Buffer checklist</h2>
+    <div class="qualifier-questions">
+      <div class="qualifier-question">
+        <p id="deadAirQuestion">Dead Air?</p>
+        <div class="inline-radios" role="radiogroup" aria-labelledby="deadAirQuestion">
+          <label><input type="radio" name="deadAir" value="yes"> Yes</label>
+          <label><input type="radio" name="deadAir" value="no"> No</label>
+        </div>
+      </div>
+      <div class="qualifier-question">
+        <p id="under85Question">Under Age 85?</p>
+        <div class="inline-radios" role="radiogroup" aria-labelledby="under85Question">
+          <label><input type="radio" name="under85" value="yes"> Yes</label>
+          <label><input type="radio" name="under85" value="no"> No</label>
+        </div>
+      </div>
+      <div class="qualifier-question">
+        <p id="licensedStateQuestion">Licensed in their State?</p>
+        <div class="inline-radios" role="radiogroup" aria-labelledby="licensedStateQuestion">
+          <label><input type="radio" name="licensedState" value="yes"> Yes</label>
+          <label><input type="radio" name="licensedState" value="no"> No</label>
+        </div>
+      </div>
+      <div class="qualifier-question">
+        <p id="programFreeQuestion">Client thinks program was free?</p>
+        <div class="inline-radios" role="radiogroup" aria-labelledby="programFreeQuestion">
+          <label><input type="radio" name="programFree" value="yes"> Yes</label>
+          <label><input type="radio" name="programFree" value="no"> No</label>
+        </div>
+      </div>
+    </div>
+    <div class="qualifier-result" id="qualifierResult" role="alert" aria-live="assertive" hidden>
+      <h3 id="qualifierResultTitle"></h3>
+      <p id="qualifierResultMessage"></p>
+      <div class="qualifier-actions">
+        <button class="primary" id="qualifierOkay" type="button">OKAY</button>
+      </div>
+    </div>
+    <div class="qualifier-actions" id="qualifierCancelActions">
+      <button id="qualifierCancel" type="button">Cancel</button>
+    </div>
+  </dialog>
 
   <template id="beneficiaryTemplate">
     <div class="repeat-row beneficiary-row">
@@ -338,6 +410,7 @@
 
       const schemaVersion = 1;
       const draftStorageKey = 'formora.application.draft.v1';
+      const qualifierPreferenceKey = 'variscribe.call-script-qualifier.enabled.v1';
       const attachmentName = 'formora-data.json';
       const form = document.getElementById('applicationForm');
       const status = document.getElementById('status');
@@ -840,6 +913,15 @@
       const passwordConfirmInput = document.getElementById('pdfPasswordConfirm');
       const passwordConfirmField = document.getElementById('pdfPasswordConfirmField');
       const passwordError = document.getElementById('passwordDialogError');
+      const qualifierToggle = document.getElementById('callScriptQualifier');
+      const qualifierToggleLabel = document.getElementById('qualifierToggle');
+      const qualifierState = document.getElementById('qualifierState');
+      const qualifierDialog = document.getElementById('bufferChecklistDialog');
+      const qualifierResult = document.getElementById('qualifierResult');
+      const qualifierResultTitle = document.getElementById('qualifierResultTitle');
+      const qualifierResultMessage = document.getElementById('qualifierResultMessage');
+      const qualifierCancelActions = document.getElementById('qualifierCancelActions');
+      const qualifierQuestions = ['deadAir', 'under85', 'licensedState', 'programFree'];
       let passwordDialogMode = 'create';
       let passwordDialogResolve;
       let passwordDialogResult;
@@ -867,6 +949,51 @@
       function finishPasswordRequest(value) {
         passwordDialogResult = value;
         passwordDialog.close();
+      }
+
+      function updateQualifierToggle() {
+        qualifierToggleLabel.dataset.enabled = String(qualifierToggle.checked);
+        qualifierState.textContent = qualifierToggle.checked ? 'On' : 'Off';
+      }
+
+      function restoreQualifierPreference() {
+        try {
+          qualifierToggle.checked = localStorage.getItem(qualifierPreferenceKey) === 'true';
+        } catch {
+          qualifierToggle.checked = false;
+        }
+        updateQualifierToggle();
+        if (qualifierToggle.checked) {
+          resetQualifierChecklist();
+          qualifierDialog.showModal();
+        }
+      }
+
+      function persistQualifierPreference() {
+        try { localStorage.setItem(qualifierPreferenceKey, String(qualifierToggle.checked)); } catch {}
+      }
+
+      function resetQualifierChecklist() {
+        for (const input of qualifierDialog.querySelectorAll('input[type="radio"]')) input.checked = false;
+        qualifierResult.hidden = true;
+        qualifierResult.dataset.outcome = '';
+        qualifierCancelActions.hidden = false;
+      }
+
+      function updateQualifierOutcome() {
+        const answers = qualifierQuestions.map(name => qualifierDialog.querySelector(`input[name="${name}"]:checked`)?.value);
+        const disqualified = answers.includes('yes');
+        const qualified = answers.every(answer => answer === 'no');
+        if (!disqualified && !qualified) {
+          qualifierResult.hidden = true;
+          qualifierCancelActions.hidden = false;
+          return;
+        }
+        qualifierResult.dataset.outcome = disqualified ? 'disqualified' : 'qualified';
+        qualifierResultTitle.textContent = disqualified ? 'END THE CALL' : 'Qualified!';
+        qualifierResultMessage.textContent = disqualified ? 'Lead does not qualify.' : 'GET THE SALE!';
+        qualifierResult.hidden = false;
+        qualifierCancelActions.hidden = true;
       }
 
       passwordDialog.addEventListener('close', () => {
@@ -1005,6 +1132,18 @@
         fieldset.hidden = !event.target.checked;
         fieldset.disabled = !event.target.checked;
       });
+      qualifierToggle.addEventListener('change', () => {
+        updateQualifierToggle();
+        persistQualifierPreference();
+        if (!qualifierToggle.checked) return;
+        resetQualifierChecklist();
+        qualifierDialog.showModal();
+      });
+      qualifierDialog.addEventListener('change', event => {
+        if (event.target.matches('input[type="radio"]')) updateQualifierOutcome();
+      });
+      document.getElementById('qualifierOkay').addEventListener('click', () => qualifierDialog.close());
+      document.getElementById('qualifierCancel').addEventListener('click', () => qualifierDialog.close());
       function resetApplication() {
         if (isDirty && !window.confirm('Discard unsaved changes and start a new application?')) return;
         form.reset();
@@ -1034,6 +1173,7 @@
       buildConditionRows();
       addRepeatRow('beneficiary', { designation: 'Primary' });
       restoreDraft();
+      restoreQualifierPreference();
     })();
   </script>
 </body>
