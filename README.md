@@ -15,7 +15,7 @@ VariScribe is a Windows desktop intake and documentation tool for insurance prof
 
 ## Download and Install
 
-Download the latest Windows installer from [GitHub Releases](https://github.com/lakeryan443-ui/VariScribe/releases/latest). Open the release, download `VariScribe_1.0.1_x64-setup.exe` from **Assets**, run it, and accept the EULA to continue installation.
+Download the latest Windows installer from [GitHub Releases](https://github.com/lakeryan443-ui/VariScribe/releases/latest). Open the release, download the `VariScribe_<version>_x64-setup.exe` installer from **Assets**, run it, and accept the EULA to continue installation.
 
 ## Client Information and PDF Protection
 
