@@ -1,0 +1,421 @@
+VARISCRIBE
+END USER LICENSE AGREEMENT (EULA)
+Every Detail Matters.
+
+Effective Date: November 1, 2026
+Software Version: 1.0 and subsequent compatible updates
+Licensor: Lake S.B.
+Contact: variscribe.support@gmail.com
+Governing Law: Maine, USA
+
+IMPORTANT NOTICE
+PLEASE READ THIS END USER LICENSE AGREEMENT ("AGREEMENT") CAREFULLY BEFORE
+INSTALLING OR USING VARISCRIBE ("SOFTWARE").
+
+THIS AGREEMENT IS A LEGALLY BINDING CONTRACT BETWEEN YOU ("USER," "LICENSEE," OR
+"YOU") AND LAKE S.B. ("LICENSOR," "DEVELOPER," "WE," OR "US").
+
+BY SELECTING "I AGREE," INSTALLING, ACCESSING, OR USING THE SOFTWARE AFTER BEING
+PRESENTED WITH THIS AGREEMENT, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD,
+AND ACCEPTED ITS TERMS.
+
+IF YOU DO NOT AGREE, DO NOT INSTALL OR USE THE SOFTWARE.
+
+VARISCRIBE IS A LOCAL DATA-COLLECTION AND DOCUMENTATION TOOL. USERS ARE
+RESPONSIBLE FOR COMPLYING WITH ALL APPLICABLE FEDERAL AND STATE LAWS, INSURANCE
+REGULATIONS, PRIVACY REQUIREMENTS, AND DATA SECURITY OBLIGATIONS.
+
+1. PURPOSE AND SCOPE
+1.1. VariScribe is a desktop software application designed to assist licensed
+insurance professionals and authorized agency personnel in collecting,
+organizing, documenting, and exporting information relevant to insurance intake
+and preliminary underwriting preparation.
+1.2. The Software is intended as an administrative tool. It does not provide
+legal advice, medical advice, insurance underwriting decisions, regulatory
+compliance certification, or professional recommendations.
+1.3. The User remains solely responsible for determining whether information
+collected is necessary, accurate, appropriate, and legally permissible.
+1.4. This Agreement governs the User's license to use the Software and does not
+replace any legal obligations imposed by applicable law.
+
+2. LICENSE GRANT
+2.1. Subject to compliance with this Agreement, the Licensor grants the User a
+limited, non-exclusive, non-transferable, revocable license to install and use
+VariScribe for lawful professional or internal business purposes.
+2.2. The Software is licensed, not sold.
+2.3. The User may not sell, sublicense, redistribute, or commercially exploit the
+Software except with the Licensor's written authorization.
+2.4. The User may not remove proprietary notices, misrepresent the origin of the
+Software, or use it for unlawful purposes.
+2.5. Any rights not expressly granted remain reserved by the Licensor.
+
+3. LOCAL DATA STORAGE AND SOFTWARE OPERATION
+3.1. VariScribe is designed to operate locally on the User's computer.
+3.2. Client information entered into the Software is exported to PDF documents
+saved to storage locations selected or controlled by the User.
+3.3. The Software is designed to protect exported PDF documents using AES-256
+encryption and password-based access controls.
+3.4. Exported PDFs may contain embedded structured information used to support
+subsequent editing or reimport into VariScribe. Such embedded information may
+include sensitive client data and must receive the same protection as the visible
+document contents.
+3.5. VariScribe does not provide developer-operated cloud storage, centralized
+client record hosting, or remote recovery of exported client documents.
+3.6. Under the Software's stated local-only operating design, client intake
+information is not intentionally transmitted to the Licensor's servers.
+3.7. Local processing may involve temporary information in computer memory or
+operating-system-managed resources. The Licensor does not represent that
+sensitive information can never appear in memory, system diagnostic records,
+backups, or other operating-system-controlled locations.
+3.8. The User acknowledges that local storage does not eliminate the possibility
+of unauthorized access, malware, device theft, data corruption, or other security
+incidents.
+
+4. USER RESPONSIBILITY FOR CLIENT INFORMATION
+4.1. The User retains responsibility for client information collected, entered,
+processed, saved, accessed, disclosed, retained, or deleted through use of
+VariScribe.
+4.2. The User is responsible for:
+- Collecting only information necessary and authorized for legitimate
+  insurance-related purposes.
+- Providing legally required privacy notices and obtaining any required
+  permissions or authorizations.
+- Confirming the accuracy of information entered.
+- Restricting access to authorized individuals.
+- Protecting computers and storage devices containing client information.
+- Maintaining appropriate password practices and access controls.
+- Safeguarding encrypted PDF documents and their passwords.
+- Using appropriate security measures when transmitting or sharing client
+  documents.
+- Maintaining backups and recovery procedures.
+- Retaining and disposing of records according to applicable legal and
+  contractual requirements.
+- Responding appropriately to suspected or confirmed data security incidents.
+4.3. The User shall not interpret the Software's availability or functionality
+as permission to collect, retain, or disclose information prohibited by law.
+4.4. The User acknowledges that sensitive client information may include personal
+identifiers, medical histories, medication information, financial information,
+and other nonpublic information protected by applicable law.
+
+4.5. RESTRICTIONS ON SHARING CLIENT INFORMATION
+VariScribe is intended solely for the collection, organization, and local storage
+of client information for authorized insurance-related purposes. VariScribe is
+not a PDF sharing, document transmission, file hosting, or client information
+distribution service.
+The User shall not share, distribute, transmit, publish, or disclose client
+information to any person or entity except where expressly authorized by the
+client, permitted or required by applicable law, and consistent with applicable
+insurance carrier and agency policies.
+The User is solely responsible for ensuring that any legally authorized
+disclosure or transfer of client information is conducted through appropriately
+secured methods and in compliance with all applicable privacy and data security
+requirements.
+
+5. COMPLIANCE WITH FEDERAL AND STATE LAWS
+5.1. STATE-SPECIFIC COMPLIANCE RESPONSIBILITY
+The User is responsible for identifying, understanding, and complying with all
+applicable laws, regulations, and regulatory requirements in every jurisdiction
+relevant to the User's insurance activities and the information processed through
+VariScribe.
+This responsibility may include the laws of the User's state of residence, home
+state of insurance licensure, nonresident licensing states, the client's state of
+residence, and other jurisdictions with applicable legal authority.
+
+5.2. DATA COLLECTION AND PRIVACY
+The User must comply with applicable requirements governing:
+- Collection and use of personal and nonpublic information.
+- Consumer privacy notices and disclosures.
+- Consent, authorization, and permissible use.
+- Collection and handling of medical or health-related information.
+- Access, correction, and other legally applicable consumer rights.
+- Restrictions on disclosure and sharing.
+- Data minimization and purpose limitation where required.
+
+5.3. INFORMATION SECURITY
+The User is responsible for complying with applicable information security
+obligations, including state insurance data security statutes, regulations, and
+requirements derived from or similar to the National Association of Insurance
+Commissioners' Insurance Data Security Model Law, where enacted and applicable.
+These obligations may include risk assessments, written information security
+programs, access controls, encryption, employee training, oversight of service
+providers, incident response procedures, and other safeguards.
+
+5.4. FEDERAL REQUIREMENTS
+Where applicable, the User must comply with federal requirements, including the
+Gramm-Leach-Bliley Act and its implementing privacy and safeguarding
+requirements, as administered by the relevant regulatory authorities.
+The User is also responsible for determining whether HIPAA, the Fair Credit
+Reporting Act, or other federal laws apply to particular activities or
+information.
+
+5.5. BREACH NOTIFICATION
+The User is responsible for identifying and fulfilling applicable duties to
+investigate and report suspected or confirmed unauthorized access, disclosure,
+loss, or compromise of client information.
+Depending on the circumstances, notification may be required to affected
+consumers, insurance regulators, carriers, agencies, government authorities, or
+other parties.
+The User must independently determine applicable reporting thresholds,
+deadlines, exemptions, and notification procedures.
+
+5.6. RECORD RETENTION AND DISPOSAL
+The User must determine and follow applicable state-specific insurance
+recordkeeping requirements, privacy rules, contractual retention obligations,
+and secure disposal requirements.
+
+5.7. NO COMPLIANCE CERTIFICATION
+VariScribe is not represented or warranted to satisfy every federal or state
+legal requirement automatically.
+Use of AES-256 encryption or other security features does not establish that the
+User is compliant with any particular law or regulation.
+
+5.8. CHANGES IN LAW
+The User is responsible for monitoring legal and regulatory changes affecting
+the User's activities. The Licensor does not undertake to monitor or notify Users
+of every change in law.
+
+6. INSURANCE CARRIER AND AGENCY REQUIREMENTS
+6.1. The User is responsible for complying with applicable insurance carrier
+agreements, agency policies, confidentiality obligations, data handling
+procedures, and professional standards.
+6.2. The User must determine whether a carrier, agency, or other organization
+permits the use of third-party intake software.
+6.3. The Licensor does not represent that VariScribe is approved, endorsed,
+certified, or authorized by any particular insurance carrier, agency, regulator,
+or professional organization.
+6.4. The User must not use VariScribe in a manner that violates applicable
+contractual or professional obligations.
+
+7. PASSWORDS, ENCRYPTION, AND ACCESS SECURITY
+7.1. The Software incorporates AES-256 encryption for exported PDF documents.
+7.2. Encryption is a security measure, not a guarantee against all unauthorized
+access or data loss.
+7.3. The User is responsible for selecting and safeguarding strong passwords,
+preventing unauthorized disclosure, and maintaining access to encrypted
+documents.
+7.4. The User acknowledges that forgotten or lost passwords may result in
+permanent inability to access encrypted information.
+7.5. Unless expressly provided as a supported feature, the Licensor cannot
+recover forgotten passwords or decrypt inaccessible client documents.
+7.6. The User shall not rely exclusively on PDF encryption to protect client
+information and must implement additional safeguards appropriate to the
+sensitivity of the information.
+7.7. The User must not intentionally bypass, weaken, or disable the Software's
+security controls.
+
+8. DEVICE SECURITY AND BACKUP RESPONSIBILITIES
+8.1. The User is responsible for securing every computer, removable drive,
+network location, or other storage medium used with VariScribe.
+8.2. Appropriate safeguards may include operating-system updates, malware
+protection, device encryption, secure authentication, restricted user accounts,
+physical security, and appropriate backup protections.
+8.3. The User is responsible for ensuring that any backup containing client
+information is appropriately protected.
+8.4. The Licensor does not provide a guarantee against loss resulting from
+hardware failure, malware, ransomware, accidental deletion, operating-system
+failure, password loss, or other circumstances beyond the Licensor's control.
+8.5. The User is responsible for maintaining a legally appropriate business
+continuity and data recovery process.
+
+9. AUTHORIZED USE AND PROHIBITED CONDUCT
+9.1. The User shall use VariScribe only for lawful purposes and in accordance
+with applicable professional obligations.
+9.2. The User shall not:
+- Collect information without legally required authority.
+- Use the Software to facilitate fraud, identity theft, or unlawful
+  discrimination.
+- Access or disclose information without authorization.
+- Misrepresent the Software as an insurer-approved underwriting system.
+- Use the Software to evade regulatory recordkeeping, privacy, or security
+  requirements.
+- Distribute maliciously modified versions of the Software.
+- Circumvent technical protections except where expressly permitted by
+  applicable law.
+
+10. DATA OWNERSHIP AND CONFIDENTIALITY
+10.1. The Licensor does not claim ownership of client information entered into
+VariScribe.
+10.2. As between the User and Licensor, the User retains responsibility for the
+lawful custody and handling of such information, subject to any rights held by
+clients, agencies, carriers, or other parties under applicable law or contract.
+10.3. This Agreement does not grant the Licensor any general right to access,
+sell, disclose, or commercially exploit client information.
+10.4. The User is responsible for maintaining the confidentiality of information
+processed through the Software.
+10.5. Nothing in this Agreement alters a consumer's statutory privacy rights or
+the User's obligations to other parties.
+
+11. SOFTWARE ACCURACY AND PROFESSIONAL JUDGMENT
+11.1. VariScribe assists with information collection and organization but does
+not independently verify the truth, completeness, or accuracy of client
+responses.
+11.2. The User must review documents before using or submitting them for
+insurance-related purposes.
+11.3. The User is responsible for ensuring that information submitted to insurers
+or other parties is accurate, complete, and authorized.
+11.4. The Software does not replace professional judgment, required carrier
+applications, underwriting procedures, or regulatory disclosures.
+11.5. The Licensor is not responsible for errors introduced by the User or for
+decisions made by insurers or other third parties.
+
+12. SOFTWARE UPDATES AND SUPPORT
+12.1. The Licensor may release updates, corrections, security improvements, or
+new versions at its discretion.
+12.2. Unless separately agreed in writing, the Licensor does not guarantee
+ongoing maintenance, technical support, or compatibility with every operating
+system or third-party application.
+12.3. The User is responsible for evaluating and installing applicable updates
+and for protecting client information during upgrades or migration.
+12.4. The Licensor may provide security-related notices through an official
+distribution or support channel, where available.
+
+13. DISCLAIMER OF WARRANTIES
+13.1. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE SOFTWARE IS PROVIDED
+"AS IS" AND "AS AVAILABLE."
+13.2. THE LICENSOR DISCLAIMS IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR
+A PARTICULAR PURPOSE, AND NON-INFRINGEMENT TO THE EXTENT SUCH DISCLAIMERS ARE
+LEGALLY PERMITTED.
+13.3. THE LICENSOR DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR-FREE,
+UNINTERRUPTED, COMPLETELY SECURE, OR SUITABLE FOR EVERY USER'S LEGAL OR
+REGULATORY REQUIREMENTS.
+13.4. NOTHING IN THIS AGREEMENT EXCLUDES WARRANTIES OR RIGHTS THAT CANNOT LAWFULLY
+BE EXCLUDED.
+
+14. LIMITATION OF LIABILITY
+14.1. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE LICENSOR SHALL NOT
+BE LIABLE FOR INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, PUNITIVE, OR CONSEQUENTIAL
+DAMAGES ARISING FROM USE OF THE SOFTWARE, INCLUDING LOST PROFITS, BUSINESS
+INTERRUPTION, OR LOSS OF BUSINESS OPPORTUNITIES.
+14.2. TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE LICENSOR'S TOTAL AGGREGATE
+LIABILITY ARISING OUT OF OR RELATING TO THIS AGREEMENT OR THE SOFTWARE SHALL NOT
+EXCEED THE GREATER OF:
+(a) THE AMOUNT ACTUALLY PAID BY THE USER FOR THE SOFTWARE DURING THE TWELVE MONTHS
+PRECEDING THE EVENT GIVING RISE TO THE CLAIM; OR
+(b) ONE HUNDRED U.S. DOLLARS ($100).
+14.3. THESE LIMITATIONS APPLY TO THE EXTENT LEGALLY PERMITTED, REGARDLESS OF THE
+LEGAL THEORY ASSERTED.
+14.4. NOTHING IN THIS AGREEMENT SHALL EXCLUDE OR LIMIT LIABILITY THAT CANNOT
+LAWFULLY BE EXCLUDED OR LIMITED, INCLUDING LIABILITY ARISING FROM FRAUD, WILLFUL
+MISCONDUCT, OR OTHER CONDUCT FOR WHICH APPLICABLE LAW PROHIBITS SUCH LIMITATION.
+14.5. THIS SECTION DOES NOT RELIEVE THE LICENSOR OF NON-WAIVABLE STATUTORY DUTIES.
+
+15. USER INDEMNIFICATION
+15.1. To the extent permitted by applicable law, the User agrees to defend,
+indemnify, and hold harmless the Licensor and its authorized representatives
+against third-party claims, liabilities, damages, and reasonable expenses
+arising from:
+(a) The User's unlawful collection, use, storage, disclosure, or disposal of
+client information;
+(b) The User's violation of applicable insurance, privacy, or data security
+requirements;
+(c) Unauthorized access or disclosure resulting from the User's failure to
+implement legally required safeguards;
+(d) The User's material breach of this Agreement; or
+(e) The User's intentional misuse of the Software.
+15.2. This obligation shall apply only to the extent the claim is attributable
+to the User's acts or omissions.
+15.3. The User shall not be required under this provision to indemnify the
+Licensor for claims attributable to the Licensor's own negligence, defective
+software, unlawful conduct, or breach of non-waivable legal duties, except to
+the extent a narrower allocation is expressly permitted by applicable law.
+15.4. The Licensor shall provide reasonable notice of an indemnified claim and
+shall not enter into a settlement imposing obligations on the User without the
+User's consent, which shall not be unreasonably withheld.
+
+16. SECURITY INCIDENTS AND COOPERATION
+16.1. The User is responsible for responding to incidents involving devices,
+passwords, or client documents under the User's control.
+16.2. Where the User reasonably suspects a defect in VariScribe contributed to a
+security incident, the User is encouraged to notify the Licensor promptly
+through the designated support contact.
+16.3. Any such notice should avoid including actual client information unless a
+secure, authorized method of disclosure has been established.
+16.4. The Licensor may investigate reported software vulnerabilities and provide
+corrections or guidance as appropriate.
+16.5. Nothing in this Agreement prevents or delays legally required reporting or
+notification.
+16.6. Nothing in this Agreement shifts responsibility away from a party for
+obligations that applicable law imposes directly upon that party.
+
+17. TERMINATION
+17.1. The User may terminate this Agreement by discontinuing use of and
+uninstalling the Software.
+17.2. The Licensor may terminate the license following a material breach of this
+Agreement, subject to applicable law.
+17.3. Termination does not automatically delete exported PDF documents or other
+information stored on the User's computer.
+17.4. The User remains responsible for retaining or securely disposing of client
+information in accordance with applicable legal and contractual obligations.
+17.5. Provisions intended by their nature to survive termination, including
+intellectual property, disclaimers, limitations of liability, and applicable
+indemnification obligations, shall survive to the extent legally enforceable.
+
+18. INTELLECTUAL PROPERTY
+18.1. VariScribe, including its original software code, branding, designs, and
+documentation, remains the property of the Licensor or applicable rights
+holders.
+18.2. This Agreement does not transfer ownership of the Software or grant
+trademark rights.
+18.3. Third-party and open-source components remain subject to their applicable
+licenses, which shall control to the extent required by those licenses.
+
+19. GOVERNING LAW AND DISPUTES
+19.1. Subject to mandatory applicable law, this Agreement shall be governed by
+the laws of Maine, USA, without regard to conflict-of-law principles.
+19.2. Any dispute arising from this Agreement shall be brought in a court of
+competent jurisdiction in Maine, USA, except where applicable law requires
+otherwise.
+19.3. The parties agree to attempt good-faith informal resolution before
+initiating litigation, unless urgent judicial relief or a statutory deadline
+requires otherwise.
+19.4. Nothing in this section prevents a consumer, regulator, or other party
+from exercising non-waivable rights under applicable law.
+
+20. SEVERABILITY
+If any provision of this Agreement is determined to be invalid or
+unenforceable, the remaining provisions shall remain effective to the extent
+permitted by law.
+Any invalid provision shall be enforced only to the extent legally permissible,
+without expanding its intended scope.
+
+21. ENTIRE AGREEMENT AND AMENDMENTS
+21.1. This Agreement constitutes the entire agreement concerning the User's
+license to the Software, except for separately applicable written agreements
+and third-party license terms.
+21.2. The Licensor may update this Agreement as necessary.
+21.3. Material changes shall be presented for acceptance before continued use
+where required by law or the applicable contractual arrangement.
+21.4. Changes shall not retroactively eliminate accrued legal rights or
+obligations where prohibited by law.
+
+22. CONTACT INFORMATION
+Questions regarding this Agreement, software licensing, or security concerns
+may be directed to:
+Licensor: Lake S.B.
+Email: variscribe.support@gmail.com
+Business Address: Omitted pending legal review.
+
+23. USER ACKNOWLEDGMENT
+By selecting "I Agree," the User acknowledges and agrees that:
+1. The User has read and accepts this Agreement.
+2. VariScribe stores exported client documents locally and uses AES-256 PDF
+encryption.
+3. The User is responsible for protecting client information, passwords,
+devices, and backups under the User's control.
+4. The User is responsible for complying with applicable federal laws and the
+data collection, privacy, security, retention, and breach notification
+requirements of every relevant state.
+5. The User is responsible for complying with applicable insurance carrier and
+agency policies.
+6. The Software does not guarantee regulatory compliance, prevent every
+security incident, or replace professional judgment.
+7. The User understands the warranty disclaimers, liability limitations, and
+other provisions of this Agreement, subject to applicable law.
+
+Acceptance Control: The installer requires the User to accept this Agreement
+before continuing.
+Acceptance Record: The installer stores the agreement version and acceptance
+timestamp locally, without storing client information in the acceptance record.
+Agreement Version: 1.0
+
+END OF END USER LICENSE AGREEMENT

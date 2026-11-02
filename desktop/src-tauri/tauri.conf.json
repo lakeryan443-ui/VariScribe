@@ -28,11 +28,15 @@
   "bundle": {
     "active": true,
     "targets": ["nsis"],
+    "licenseFile": "./license.txt",
     "icon": ["icons/icon.ico"],
     "resources": {
       "resources/qpdf/": "qpdf/"
     },
     "windows": {
+      "nsis": {
+        "installerHooks": "./windows/installer-hooks.nsh"
+      },
       "webviewInstallMode": {
         "type": "downloadBootstrapper",
         "silent": true
