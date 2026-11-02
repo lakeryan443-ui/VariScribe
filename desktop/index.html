@@ -319,7 +319,7 @@
     <form id="pdfPasswordForm">
       <div>
         <h2 id="passwordDialogTitle">Protect PDF</h2>
-        <p id="passwordDialogDescription">Choose a password with 12 to 127 printable ASCII characters. You will need it to reopen the editable data.</p>
+        <p id="passwordDialogDescription">Choose a password that is at least 12 characters long and no more than 127 characters. Use letters, numbers, or symbols you can type on a standard keyboard. You will need it to reopen the editable data.</p>
       </div>
       <label class="field">PDF password<input id="pdfPassword" type="password" autocomplete="off" maxlength="127" required></label>
       <label class="field" id="pdfPasswordConfirmField">Confirm password<input id="pdfPasswordConfirm" type="password" autocomplete="off" maxlength="127" required></label>
@@ -931,7 +931,7 @@
         passwordDialogResult = null;
         document.getElementById('passwordDialogTitle').textContent = mode === 'create' ? 'Protect PDF' : 'Open protected PDF';
         document.getElementById('passwordDialogDescription').textContent = mode === 'create'
-          ? 'Choose a password with 12 to 127 printable ASCII characters. You will need it to reopen the editable data.'
+          ? 'Choose a password that is at least 12 characters long and no more than 127 characters. Use letters, numbers, or symbols you can type on a standard keyboard. You will need it to reopen the editable data.'
           : 'Enter the password for this PDF.';
         document.getElementById('submitPdfPassword').textContent = mode === 'create' ? 'Save PDF' : 'Open PDF';
         passwordConfirmField.hidden = mode !== 'create';
@@ -1015,7 +1015,7 @@
         const password = passwordInput.value;
         if (passwordDialogMode === 'create') {
           if (!/^[\x20-\x7e]{12,127}$/.test(password)) {
-            passwordError.textContent = 'Use 12 to 127 printable ASCII characters.';
+            passwordError.textContent = 'Password must be at least 12 characters and no more than 127. Use standard keyboard characters.';
             return;
           }
           if (password !== passwordConfirmInput.value) {
