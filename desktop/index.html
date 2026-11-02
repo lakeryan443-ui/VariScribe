@@ -113,6 +113,8 @@
     .password-dialog form { display: grid; gap: 12px; }
     .password-dialog [hidden] { display: none; }
     .password-dialog .password-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+    #protectPdfWithPassword { display: grid; justify-items: center; gap: 1px; line-height: 1.1; }
+    #protectPdfWithPassword small { font-size: 10px; font-weight: 500; }
     .password-dialog .password-error { min-height: 16px; margin: 0; color: #9c3d2c; font-size: 12px; }
     @media (max-width: 800px) {
       .shell { padding: 14px; }
@@ -315,6 +317,19 @@
     </form>
     <p class="footer">For intake and quoting support only. Carrier application requirements vary.</p>
   </main>
+  <dialog id="pdfProtectionDialog" class="password-dialog" aria-labelledby="pdfProtectionTitle">
+    <form>
+      <div>
+        <h2 id="pdfProtectionTitle">Password protect this PDF?</h2>
+        <p>A password is optional. Without one, anyone with access to the saved PDF can open the document and its editable data.</p>
+      </div>
+      <div class="password-actions">
+        <button id="cancelPdfProtection" type="button">Cancel</button>
+        <button id="savePdfWithoutPassword" type="button">No</button>
+        <button class="primary" id="protectPdfWithPassword" type="button"><span>Yes</span><small>(Recommended)</small></button>
+      </div>
+    </form>
+  </dialog>
   <dialog id="pdfPasswordDialog" class="password-dialog" aria-labelledby="passwordDialogTitle">
     <form id="pdfPasswordForm">
       <div>
@@ -913,6 +928,7 @@
       const passwordConfirmInput = document.getElementById('pdfPasswordConfirm');
       const passwordConfirmField = document.getElementById('pdfPasswordConfirmField');
       const passwordError = document.getElementById('passwordDialogError');
+      const pdfProtectionDialog = document.getElementById('pdfProtectionDialog');
       const qualifierToggle = document.getElementById('callScriptQualifier');
       const qualifierToggleLabel = document.getElementById('qualifierToggle');
       const qualifierState = document.getElementById('qualifierState');
@@ -925,6 +941,7 @@
       let passwordDialogMode = 'create';
       let passwordDialogResolve;
       let passwordDialogResult;
+      let pdfProtectionResolve;
 
       function requestPdfPassword(mode, message = '') {
         passwordDialogMode = mode;
@@ -949,6 +966,21 @@
       function finishPasswordRequest(value) {
         passwordDialogResult = value;
         passwordDialog.close();
+      }
+
+      function requestPdfProtection() {
+        return new Promise(resolve => {
+          pdfProtectionResolve = resolve;
+          pdfProtectionDialog.showModal();
+          document.getElementById('protectPdfWithPassword').focus();
+        });
+      }
+
+      function finishPdfProtectionRequest(value) {
+        const resolve = pdfProtectionResolve;
+        pdfProtectionResolve = null;
+        if (pdfProtectionDialog.open) pdfProtectionDialog.close();
+        resolve?.(value);
       }
 
       function updateQualifierToggle() {
@@ -1009,6 +1041,13 @@
         event.preventDefault();
         finishPasswordRequest(null);
       });
+      pdfProtectionDialog.addEventListener('cancel', event => {
+        event.preventDefault();
+        finishPdfProtectionRequest(null);
+      });
+      document.getElementById('cancelPdfProtection').addEventListener('click', () => finishPdfProtectionRequest(null));
+      document.getElementById('savePdfWithoutPassword').addEventListener('click', () => finishPdfProtectionRequest(false));
+      document.getElementById('protectPdfWithPassword').addEventListener('click', () => finishPdfProtectionRequest(true));
       document.getElementById('cancelPdfPassword').addEventListener('click', () => finishPasswordRequest(null));
       passwordForm.addEventListener('submit', event => {
         event.preventDefault();
@@ -1038,11 +1077,19 @@
             return;
           }
         }
-        let password = await requestPdfPassword('create');
-        if (password === null) return;
+        const protectPdf = await requestPdfProtection();
+        if (protectPdf === null) return;
+        let password = '';
+        if (protectPdf) {
+          password = await requestPdfPassword('create');
+          if (password === null) return;
+        }
         try {
           const bytes = await createPdf(data);
-          const savedPath = await invoke('save_encrypted_pdf', { pdfBytes: Array.from(bytes), password });
+          const savedPath = await invoke('save_pdf', {
+            pdfBytes: Array.from(bytes),
+            password: protectPdf ? password : null,
+          });
           if (!savedPath) return;
           isDirty = false;
           setStatus('PDF Saved');

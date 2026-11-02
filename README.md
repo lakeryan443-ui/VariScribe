@@ -4,7 +4,7 @@
 
 > **IMPORTANT:** Insurance agents are responsible for protecting client information and complying with applicable federal and state laws, regulations, and agency or carrier requirements. VariScribe does not replace those responsibilities.
 
-VariScribe is a Windows desktop intake and documentation tool for insurance professionals. It helps organize client information during calls and export it as a password-protected PDF.
+VariScribe is a Windows desktop intake and documentation tool for insurance professionals. It helps organize client information during calls and export it as a PDF, with optional password protection.
 
 ## What It Does
 
@@ -19,7 +19,7 @@ Download the latest Windows installer from [GitHub Releases](https://github.com/
 
 ## Client Information and PDF Protection
 
-PDF exports are encrypted with AES-256 and password-protected to help protect client information. The password is required to reopen the editable data; lost passwords cannot be recovered by the developer.
+When password protection is selected, the PDF is encrypted with AES-256 and requires that password to reopen. Lost passwords cannot be recovered by the developer. If protection is declined, the PDF and its embedded editable data are not encrypted and can be opened by anyone with access to the file.
 
 VariScribe is intended as an insurance intake tool, **not a document-encryption or file-sharing service**. It does not provide cloud storage or client-record hosting. Client information is saved only when the agent chooses **Save PDF**; the app does not automatically save an unfinished intake. The exported PDF and its embedded JSON contain the same client information and should be protected accordingly.
 

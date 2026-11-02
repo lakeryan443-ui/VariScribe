@@ -36,17 +36,19 @@ async fn pick_pdf_bytes(app: AppHandle) -> Result<Option<Vec<u8>>, String> {
 }
 
 #[tauri::command]
-async fn save_encrypted_pdf(
+async fn save_pdf(
     app: AppHandle,
     pdf_bytes: Vec<u8>,
-    password: String,
+    password: Option<String>,
 ) -> Result<Option<String>, String> {
     let pdf_bytes = Zeroizing::new(pdf_bytes);
-    let password = Zeroizing::new(password);
+    let password = password.map(Zeroizing::new);
     if pdf_bytes.is_empty() || pdf_bytes.len() as u64 > MAX_PDF_BYTES {
         return Err("The generated PDF is empty or larger than 100 MB.".into());
     }
-    validate_password(&password)?;
+    if let Some(password) = &password {
+        validate_password(password.as_str())?;
+    }
 
     let selected = app
         .dialog()
@@ -64,23 +66,27 @@ async fn save_encrypted_pdf(
         destination.set_extension("pdf");
     }
 
-    let mut owner_bytes = Zeroizing::new([0_u8; 32]);
-    getrandom::fill(&mut owner_bytes[..])
-        .map_err(|error| format!("Could not generate encryption credentials: {error}"))?;
-    let owner_password = Zeroizing::new(
-        owner_bytes
-            .iter()
-            .map(|byte| format!("{byte:02x}"))
-            .collect::<String>(),
-    );
-    let dll_path = qpdf_dll_path(&app)?;
-    encrypt_and_save_pdf(
-        &pdf_bytes,
-        &password,
-        &owner_password,
-        &dll_path,
-        &destination,
-    )?;
+    if let Some(password) = password {
+        let mut owner_bytes = Zeroizing::new([0_u8; 32]);
+        getrandom::fill(&mut owner_bytes[..])
+            .map_err(|error| format!("Could not generate encryption credentials: {error}"))?;
+        let owner_password = Zeroizing::new(
+            owner_bytes
+                .iter()
+                .map(|byte| format!("{byte:02x}"))
+                .collect::<String>(),
+        );
+        let dll_path = qpdf_dll_path(&app)?;
+        encrypt_and_save_pdf(
+            &pdf_bytes,
+            &password,
+            &owner_password,
+            &dll_path,
+            &destination,
+        )?;
+    } else {
+        write_pdf_atomic(&destination, &pdf_bytes)?;
+    }
     Ok(Some(destination.display().to_string()))
 }
 
@@ -123,7 +129,7 @@ fn qpdf_dll_path(app: &AppHandle) -> Result<PathBuf, String> {
     Err("The bundled PDF encryption component is missing.".into())
 }
 
-fn write_encrypted_atomic(destination: &Path, encrypted_pdf: &[u8]) -> Result<(), String> {
+fn write_pdf_atomic(destination: &Path, pdf_bytes: &[u8]) -> Result<(), String> {
     let directory = destination
         .parent()
         .filter(|path| !path.as_os_str().is_empty())
@@ -132,17 +138,17 @@ fn write_encrypted_atomic(destination: &Path, encrypted_pdf: &[u8]) -> Result<()
         .prefix(".variscribe-")
         .suffix(".pdf.tmp")
         .tempfile_in(directory)
-        .map_err(|error| format!("Could not stage encrypted PDF: {error}"))?;
+        .map_err(|error| format!("Could not stage PDF: {error}"))?;
     staged
-        .write_all(encrypted_pdf)
-        .map_err(|error| format!("Could not write encrypted PDF: {error}"))?;
+        .write_all(pdf_bytes)
+        .map_err(|error| format!("Could not write PDF: {error}"))?;
     staged
         .as_file()
         .sync_all()
-        .map_err(|error| format!("Could not flush encrypted PDF: {error}"))?;
+        .map_err(|error| format!("Could not flush PDF: {error}"))?;
     staged
         .persist(destination)
-        .map_err(|error| format!("Could not save encrypted PDF: {}", error.error))?;
+        .map_err(|error| format!("Could not save PDF: {}", error.error))?;
     Ok(())
 }
 
@@ -154,13 +160,13 @@ fn encrypt_and_save_pdf(
     destination: &Path,
 ) -> Result<(), String> {
     let encrypted_pdf = qpdf_memory::encrypt_pdf(pdf_bytes, password, owner_password, qpdf_dll)?;
-    write_encrypted_atomic(destination, &encrypted_pdf)
+    write_pdf_atomic(destination, &encrypted_pdf)
 }
 
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![pick_pdf_bytes, save_encrypted_pdf])
+        .invoke_handler(tauri::generate_handler![pick_pdf_bytes, save_pdf])
         .run(tauri::generate_context!())
         .expect("error while running VariScribe");
 }
@@ -171,25 +177,25 @@ mod tests {
     use std::fs;
 
     #[test]
-    fn interrupted_save_leaves_only_encrypted_bytes() {
+    fn interrupted_save_leaves_only_staged_pdf_bytes() {
         let directory = tempfile::tempdir().expect("temporary test directory");
         let destination = directory.path().join("client.pdf");
-        let encrypted_bytes = b"ciphertext-marker";
+        let pdf_bytes = b"PDF-bytes-marker";
 
         let mut staged = tempfile::Builder::new()
             .prefix(".variscribe-")
             .suffix(".pdf.tmp")
             .tempfile_in(directory.path())
             .expect("stage output");
-        staged.write_all(encrypted_bytes).expect("write ciphertext");
-        staged.as_file().sync_all().expect("flush ciphertext");
+        staged.write_all(pdf_bytes).expect("write PDF bytes");
+        staged.as_file().sync_all().expect("flush PDF bytes");
         let staged_path = staged.path().to_path_buf();
         std::mem::forget(staged);
 
         assert!(!destination.exists());
         assert_eq!(
             fs::read(&staged_path).expect("read interrupted stage"),
-            encrypted_bytes
+            pdf_bytes
         );
         assert_eq!(
             fs::read_dir(directory.path())
@@ -200,16 +206,16 @@ mod tests {
     }
 
     #[test]
-    fn atomic_save_replaces_only_the_final_encrypted_file() {
+    fn atomic_save_replaces_only_the_final_pdf_file() {
         let directory = tempfile::tempdir().expect("temporary test directory");
         let destination = directory.path().join("client.pdf");
-        fs::write(&destination, b"previous ciphertext").expect("create existing destination");
+        fs::write(&destination, b"previous PDF bytes").expect("create existing destination");
 
-        write_encrypted_atomic(&destination, b"new ciphertext").expect("atomic encrypted save");
+        write_pdf_atomic(&destination, b"new PDF bytes").expect("atomic PDF save");
 
         assert_eq!(
             fs::read(&destination).expect("read saved PDF"),
-            b"new ciphertext"
+            b"new PDF bytes"
         );
         assert_eq!(
             fs::read_dir(directory.path())
@@ -220,12 +226,12 @@ mod tests {
     }
 
     #[test]
-    fn failed_final_save_removes_the_encrypted_stage() {
+    fn failed_final_save_removes_the_staged_pdf() {
         let directory = tempfile::tempdir().expect("temporary test directory");
         let destination = directory.path().join("existing-directory");
         fs::create_dir(&destination).expect("create conflicting destination");
 
-        assert!(write_encrypted_atomic(&destination, b"ciphertext-marker").is_err());
+        assert!(write_pdf_atomic(&destination, b"PDF-marker").is_err());
         assert!(destination.is_dir());
         assert_eq!(
             fs::read_dir(directory.path())
@@ -233,6 +239,17 @@ mod tests {
                 .count(),
             1
         );
+    }
+
+    #[test]
+    fn atomic_save_preserves_unprotected_pdf_bytes() {
+        let directory = tempfile::tempdir().expect("temporary test directory");
+        let destination = directory.path().join("client.pdf");
+        let pdf_bytes = b"%PDF-1.7\nunprotected test PDF";
+
+        write_pdf_atomic(&destination, pdf_bytes).expect("save unprotected PDF");
+
+        assert_eq!(fs::read(&destination).expect("read saved PDF"), pdf_bytes);
     }
 
     #[test]

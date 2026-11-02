@@ -53,8 +53,9 @@ Software, or use it for unlawful purposes.
 3.1. VariScribe is designed to operate locally on the User's computer.
 3.2. Client information entered into the Software is exported to PDF documents
 saved to storage locations selected or controlled by the User.
-3.3. The Software is designed to protect exported PDF documents using AES-256
-encryption and password-based access controls.
+3.3. The User may choose to protect an exported PDF using AES-256 encryption and
+password-based access controls. A PDF saved without password protection is not
+encrypted and can be opened by anyone with access to the file.
 3.4. Exported PDFs may contain embedded structured information used to support
 subsequent editing or reimport into VariScribe. Such embedded information may
 include sensitive client data and must receive the same protection as the visible
@@ -84,7 +85,7 @@ VariScribe.
 - Restricting access to authorized individuals.
 - Protecting computers and storage devices containing client information.
 - Maintaining appropriate password practices and access controls.
-- Safeguarding encrypted PDF documents and their passwords.
+- Safeguarding client PDFs and any passwords used to protect them.
 - Using appropriate security measures when transmitting or sharing client
   documents.
 - Maintaining backups and recovery procedures.
@@ -187,19 +188,22 @@ or professional organization.
 contractual or professional obligations.
 
 7. PASSWORDS, ENCRYPTION, AND ACCESS SECURITY
-7.1. The Software incorporates AES-256 encryption for exported PDF documents.
+7.1. When the User selects password protection, the Software uses AES-256
+encryption for that exported PDF. Password protection is optional; PDFs saved
+without it are not encrypted.
 7.2. Encryption is a security measure, not a guarantee against all unauthorized
 access or data loss.
-7.3. The User is responsible for selecting and safeguarding strong passwords,
-preventing unauthorized disclosure, and maintaining access to encrypted
-documents.
-7.4. The User acknowledges that forgotten or lost passwords may result in
-permanent inability to access encrypted information.
+7.3. If the User selects password protection, the User is responsible for
+selecting and safeguarding a strong password, preventing its unauthorized
+disclosure, and maintaining access to the encrypted document.
+7.4. The User acknowledges that a forgotten or lost password may result in
+permanent inability to access an encrypted PDF.
 7.5. Unless expressly provided as a supported feature, the Licensor cannot
 recover forgotten passwords or decrypt inaccessible client documents.
-7.6. The User shall not rely exclusively on PDF encryption to protect client
-information and must implement additional safeguards appropriate to the
-sensitivity of the information.
+7.6. The User shall not rely exclusively on optional PDF encryption to protect
+client information and must implement additional safeguards appropriate to the
+sensitivity of the information. PDFs saved without password protection can be
+opened by anyone with access to the file.
 7.7. The User must not intentionally bypass, weaken, or disable the Software's
 security controls.
 
@@ -398,8 +402,9 @@ Business Address: Omitted pending legal review.
 23. USER ACKNOWLEDGMENT
 By selecting "I Agree," the User acknowledges and agrees that:
 1. The User has read and accepts this Agreement.
-2. VariScribe stores exported client documents locally and uses AES-256 PDF
-encryption.
+2. VariScribe stores exported client documents locally. Password protection is
+optional; when selected, exported PDFs use AES-256 encryption. PDFs saved without
+password protection can be opened by anyone with access to the file.
 3. The User is responsible for protecting client information, passwords,
 devices, and backups under the User's control.
 4. The User is responsible for complying with applicable federal laws and the

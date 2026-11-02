@@ -20,6 +20,16 @@ await plainDocument.attach(
   { mimeType: 'application/json' },
 );
 const plainBytes = await plainDocument.save();
+const plainLoadingTask = pdfjsLib.getDocument({ data: plainBytes.slice() });
+const plainLoadedDocument = await plainLoadingTask.promise;
+const plainAttachments = await plainLoadedDocument.getAttachments();
+const plainAttachmentEntry = plainAttachments && [...plainAttachments.entries()].find(([, item]) => item.filename === 'formora-data.json');
+
+assert.ok(plainAttachmentEntry, 'an unprotected PDF should contain the editable JSON attachment');
+const plainAttachmentContent = plainAttachmentEntry[1].content ?? await plainLoadedDocument.getAttachmentContent(plainAttachmentEntry[0]);
+assert.deepEqual(JSON.parse(new TextDecoder().decode(plainAttachmentContent)), expected);
+await plainLoadingTask.destroy();
+
 const encryptedBytes = await encryptInMemory(plainBytes);
 if (process.env.FORMORA_VIEWER_FIXTURE_PATH) {
   await writeFile(process.env.FORMORA_VIEWER_FIXTURE_PATH, encryptedBytes);
@@ -46,7 +56,7 @@ await assert.rejects(
 );
 await incorrectPasswordTask.destroy();
 
-console.log('PASS: in-memory QPDF AES-256 attachment round-trip and wrong-password rejection');
+console.log('PASS: unprotected and AES-256 encrypted attachment round-trips, plus wrong-password rejection');
 
 function encryptInMemory(plainBytes) {
   return new Promise((resolve, reject) => {
