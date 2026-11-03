@@ -31,6 +31,9 @@
     .masthead { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 20px; }
     .brand { display: flex; align-items: center; gap: 12px; }
     .brand-mark { display: block; width: 42px; height: 42px; object-fit: cover; }
+    .masthead-tools { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .theme-toggle { display: grid; flex: 0 0 40px; place-items: center; width: 40px; height: 40px; min-height: 40px; padding: 5px; }
+    .theme-toggle img { display: block; width: 28px; height: 28px; object-fit: contain; }
     h1 { margin: 0; font: 600 30px Georgia, serif; letter-spacing: 0; }
     .masthead p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
     .status { padding: 7px 10px; border-left: 3px solid var(--accent); color: var(--muted); font-size: 12px; white-space: nowrap; }
@@ -52,8 +55,14 @@
     .hint { margin: 5px 0 18px; color: var(--muted); font-size: 12px; }
     .fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
     .field { display: flex; flex-direction: column; gap: 5px; min-width: 0; color: #334947; font-size: 12px; font-weight: 650; }
+    .marital-insurance-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; min-width: 0; }
+    .age-gender-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; gap: 8px; min-width: 0; }
+    .age-field input { width: 100%; min-width: 0; padding-inline: 3px; text-align: center; }
     .field.wide { grid-column: span 2; }
     .field.full { grid-column: 1 / -1; }
+    .field.is-disabled { color: #77817e; }
+    .field.is-disabled input, .field.is-disabled select { background: #edf1ef; color: #77817e; }
+    .field-warning { margin: 0; padding: 6px 8px; border: 1px solid #e6b45e; border-radius: 3px; color: #7a4c10; background: #fff6df; font-size: 10px; font-weight: 700; line-height: 1.3; }
     .inline-radios { display: flex; align-items: center; gap: 14px; min-height: 38px; }
     .inline-radios label { display: flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 400; }
     .inline-radios input[type="radio"] { width: 16px; min-height: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--focus); }
@@ -77,6 +86,11 @@
     td:first-child { min-width: 170px; font-weight: 650; }
     td input, td select { min-width: 110px; min-height: 34px; padding: 6px; }
     .condition-complications td:first-child { padding-left: 22px; font-weight: 400; }
+    .condition-row.is-inactive td:nth-child(n+3), .condition-complications.is-inactive td:nth-child(n+3) { color: #858d89; background: #e6e9e7; }
+    .condition-row.is-inactive td:nth-child(n+3) input, .condition-complications.is-inactive td:nth-child(n+3) select { border-color: #cbd1ce; color: #858d89; background: #e6e9e7; }
+    :root[data-theme="dark"] .condition-row.is-inactive td:nth-child(n+3), :root[data-theme="dark"] .condition-complications.is-inactive td:nth-child(n+3) { color: #858b8e; background: #343638; }
+    :root[data-theme="dark"] .condition-row.is-inactive td:nth-child(n+3) input, :root[data-theme="dark"] .condition-complications.is-inactive td:nth-child(n+3) select { border-color: #494b4d; color: #858b8e; background: #343638; }
+    .condition-complications select[data-field="gabapentinOrLyrica"]:has(option[value=""]:checked) { font-weight: 700; }
     .present-options { display: flex; align-items: center; gap: 10px; }
     .present-options label { display: flex; align-items: center; gap: 4px; font-weight: 400; white-space: nowrap; }
     .present-options input[type="radio"] { width: 16px; min-width: 16px; min-height: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--focus); }
@@ -135,8 +149,44 @@
       .section { padding: 14px; }
       .toolbar button { flex: 1 1 44%; }
       .qualifier-toggle { flex: 1 1 100%; justify-content: center; margin-left: 0; }
+      .masthead-tools { align-self: stretch; flex-direction: row-reverse; justify-content: space-between; }
+      .masthead-tools .status { white-space: normal; }
       nav a { padding: 8px; font-size: 12px; }
     }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --ink: #cccccc;
+      --muted: #9da3a6;
+      --line: #3c3c3c;
+      --paper: #252526;
+      --canvas: #1e1e1e;
+      --green: #0e639c;
+      --green-light: #2a2d2e;
+      --accent: #d1694a;
+      --focus: #007fd4;
+    }
+    :root[data-theme="dark"] button { border-color: #4a4a4a; color: var(--ink); }
+    :root[data-theme="dark"] button:hover { border-color: var(--focus); background: #2a2d2e; }
+    :root[data-theme="dark"] button.primary { border-color: var(--green); color: #fff; background: var(--green); }
+    :root[data-theme="dark"] button.primary:hover { background: #1177bb; }
+    :root[data-theme="dark"] button.danger { border-color: #70443e; color: #f2a197; }
+    :root[data-theme="dark"] nav a:hover, :root[data-theme="dark"] nav a:focus-visible { background: #2a2d2e; }
+    :root[data-theme="dark"] .field { color: #c8d0d4; }
+    :root[data-theme="dark"] .field.is-disabled { color: #858b8e; }
+    :root[data-theme="dark"] .field.is-disabled input, :root[data-theme="dark"] .field.is-disabled select { color: #858b8e; background: #2b2b2b; }
+    :root[data-theme="dark"] .field-warning { border-color: #806334; color: #e7c98a; background: #3a3225; }
+    :root[data-theme="dark"] input, :root[data-theme="dark"] select, :root[data-theme="dark"] textarea { border-color: #555; color: var(--ink); background: #3c3c3c; }
+    :root[data-theme="dark"] input[readonly] { background: #2d2d30; }
+    :root[data-theme="dark"] .repeat-row { border-color: var(--line); background: #2a2a2b; }
+    :root[data-theme="dark"] th { color: #c8d0d4; background: #2d2d30; }
+    :root[data-theme="dark"] td { border-color: #454545; }
+    :root[data-theme="dark"] .qualifier-toggle { border-color: #70443e; color: #f2a197; background: #392725; }
+    :root[data-theme="dark"] .qualifier-toggle[data-enabled="true"] { border-color: #317b68; color: #9bd8c5; background: #1e3b34; }
+    :root[data-theme="dark"] .qualifier-track { background: #a64b3a; }
+    :root[data-theme="dark"] .qualifier-toggle[data-enabled="true"] .qualifier-track { background: #16866f; }
+    :root[data-theme="dark"] .qualifier-result { border-color: #70443e; color: #f2a197; background: #392725; }
+    :root[data-theme="dark"] .qualifier-result[data-outcome="qualified"] { border-color: #317b68; color: #9bd8c5; background: #1e3b34; }
+    :root[data-theme="dark"] .validation, :root[data-theme="dark"] .password-dialog .password-error { color: #f48771; }
   </style>
 </head>
 <body>
@@ -149,7 +199,10 @@
           <p>Every Detail Matters.</p>
         </div>
       </div>
-      <div class="status" id="status" role="status" aria-live="polite">Quickly add and save client info during calls.</div>
+      <div class="masthead-tools">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme, currently light" title="Switch to dark mode"><img id="themeIcon" src="/nobackgroundlightmode.png" alt="" width="28" height="28"></button>
+        <div class="status" id="status" role="status" aria-live="polite">Quickly add and save client info during calls.</div>
+      </div>
     </header>
 
     <div class="toolbar" aria-label="Application actions">
@@ -188,8 +241,15 @@
               <label class="field">Middle name<input name="middleName"></label>
               <label class="field">Last name<input name="lastName" autocomplete="family-name"></label>
               <label class="field">Date of birth<input name="dateOfBirth" id="dateOfBirth" type="date" autocomplete="bday"></label>
-              <label class="field">Age<input name="age" id="age" readonly aria-label="Calculated age"></label>
-              <div class="field"><span>Gender</span><div class="inline-radios" role="radiogroup" aria-label="Gender"><label><input name="sexForQuoting" type="radio" value="Male"> Male</label><label><input name="sexForQuoting" type="radio" value="Female"> Female</label></div></div>
+              <div class="age-gender-group">
+                <label class="field age-field">Age<input name="age" id="age" readonly aria-label="Calculated age"></label>
+                <div class="field"><span>Gender</span><div class="inline-radios" role="radiogroup" aria-label="Gender"><label><input name="sexForQuoting" type="radio" value="Male"> Male</label><label><input name="sexForQuoting" type="radio" value="Female"> Female</label></div></div>
+              </div>
+              <div class="field">
+                <span>Bank account available?</span>
+                <div class="inline-radios" role="radiogroup" aria-label="Bank account available?"><label><input name="bankAvailable" type="radio" value="Yes"> Yes</label><label><input name="bankAvailable" type="radio" value="No"> No</label></div>
+                <p class="field-warning" id="bankPaymentWarning" role="status" aria-live="polite" hidden>CAN ONLY USE CARRIERS THAT ACCEPT CARD PAYMENTS.</p>
+              </div>
               <label class="field">Resident state<select name="residentState" data-us-state autocomplete="address-level1"><option value="">Select a state</option></select></label>
               <label class="field">State of birth<select name="birthState" data-us-state><option value="">Select a state</option></select></label>
               <div class="field"><span>Height</span><div class="height-parts"><label>ft<select name="heightFeet" aria-label="Height in feet"><option value="">ft</option></select></label><label>in<select name="heightInches" aria-label="Height in inches"><option value="">in</option></select></label></div></div>
@@ -199,11 +259,15 @@
               <div class="field"><span>Can receive texts?</span><div class="inline-radios" role="radiogroup" aria-label="Can receive texts?"><label><input name="canReceiveTexts" type="radio" value="Yes"> Yes</label><label><input name="canReceiveTexts" type="radio" value="No"> No</label></div></div>
               <div class="field"><span>Power of attorney or payee involved?</span><div class="inline-radios" role="radiogroup" aria-label="Power of attorney or payee involved?"><label><input name="payeeInvolved" type="radio" value="Yes"> Yes</label><label><input name="payeeInvolved" type="radio" value="No"> No</label></div></div>
               <label class="field wide">Email<input name="email" type="email" autocomplete="email"></label>
-              <label class="field">Marital status<select name="maritalStatus"><option value="">Select</option><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option><option>Separated</option></select></label>
+              <div class="marital-insurance-group">
+                <label class="field">Marital status<select name="maritalStatus"><option value="">Select</option><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option><option>Separated</option></select></label>
+                <label class="field">Insurance type<select id="clientInsuranceType" aria-label="Insurance type"><option value="">Select</option><option>Final expense</option><option>Whole life</option><option>Term life</option></select></label>
+              </div>
               <label class="field wide">Physical street address<input name="streetAddress" autocomplete="street-address"></label>
               <label class="field">City<input name="city" autocomplete="address-level2"></label>
               <label class="field">State<select name="mailingState" data-us-state autocomplete="address-level1"><option value="">Select a state</option></select></label>
               <label class="field">ZIP code<input name="zipCode" autocomplete="postal-code"></label>
+              <label class="field">Looking for which policy type?<select id="policyTypeInterest" aria-label="Looking for which policy type?"><option value="">Select</option><option>Final expense</option><option>Whole life</option><option>Term life</option></select></label>
             </div>
           </section>
 
@@ -244,15 +308,15 @@
             <h2>Coverage needs</h2>
             <p class="hint">Capture current coverage, desired amount, and the quote being considered.</p>
             <div class="fields">
-              <label class="field">Insurance type<select name="insuranceType"><option value="">Select</option><option>Final expense</option><option>Whole life</option><option>Term life</option><option>Other</option></select></label>
-              <label class="field">Desired coverage amount ($)<input name="desiredCoverage" type="number" min="0" step="0.01"></label>
-              <input name="monthlyBudget" type="hidden">
-              <label class="field">Burial or cremation preference<select name="finalArrangement"><option value="">Select</option><option>Burial</option><option>Cremation</option><option>Undecided</option></select></label>
               <label class="field">Existing life insurance?<select name="hasExistingCoverage"><option value="">Select</option><option>No</option><option>Yes</option></select></label>
               <label class="field">Existing carrier<input name="existingCarrier"></label>
               <label class="field">Existing coverage amount ($)<input name="existingCoverageAmount" type="number" min="0" step="0.01"></label>
               <label class="field">Existing premium ($/month)<input name="existingPremium" type="number" min="0" step="0.01"></label>
               <label class="field">Existing policy effective year<input name="existingEffectiveDate" type="number" min="1900" max="2100" step="1" placeholder="YYYY"></label>
+              <label class="field">Insurance type<select name="insuranceType"><option value="">Select</option><option>Final expense</option><option>Whole life</option><option>Term life</option></select></label>
+              <label class="field">Desired coverage amount ($)<input name="desiredCoverage" type="number" min="0" step="0.01"></label>
+              <input name="monthlyBudget" type="hidden">
+              <label class="field">Burial or cremation preference<select name="finalArrangement"><option value="">Select</option><option>Burial</option><option>Cremation</option><option>Undecided</option></select></label>
               <label class="field">Replacement consideration<select name="replacementConsideration"><option value="">Select</option><option>No</option><option>Yes</option><option>Undecided</option></select></label>
               <label class="field">Quoted coverage amount ($)<input name="quotedCoverage" type="number" min="0" step="0.01"></label>
               <label class="field">Quoted monthly premium ($)<input name="quotedPremium" type="number" min="0" step="0.01"></label>
@@ -267,12 +331,10 @@
               <label class="field">Income source<input name="incomeSource" placeholder="Employment, retirement, benefits, etc."></label>
               <label class="field">Approx. monthly income ($)<input name="monthlyIncome" type="number" min="0" step="0.01"></label>
               <label class="field">Bank or credit union name<input name="bankName"></label>
-              <label class="field">Account type<select name="accountType"><option value="">Select</option><option>Checking</option><option>Savings</option><option>Other</option></select></label>
+              <label class="field">Account type<select name="accountType"><option value="">Select</option><option>Checking</option><option>Savings</option></select></label>
               <label class="field">Preferred recurring draft date<select name="draftDate"><option value="">Select</option></select></label>
               <input name="legacyDraftDate" type="hidden">
-              <label class="field">Payment frequency<select name="paymentFrequency"><option value="">Select</option><option>Monthly</option><option>Quarterly</option><option>Semi-annually</option><option>Annually</option></select></label>
               <label class="field">Initial payment date<input name="initialPaymentDate" type="date"></label>
-              <label class="field">Bank account available?<select name="bankAvailable"><option value="">Select</option><option>Yes</option><option>No</option></select></label>
             </div>
             <input name="alternatePaymentMethod" type="hidden">
             <input name="paymentDetails" type="hidden">
@@ -287,10 +349,18 @@
               <label class="field">Coverage amount ($)<input name="policyCoverage" type="number" min="0" step="0.01"></label>
               <label class="field">Monthly premium ($)<input name="policyPremium" type="number" min="0" step="0.01"></label>
               <label class="field">Effective date<input name="effectiveDate" type="date"></label>
-              <label class="field">Policy number<input name="policyNumber"></label>
+              <label class="field">Instant Approval Policy number<input name="policyNumber"></label>
+              <div class="field">
+                <span>Legacy Safeguard presented?</span>
+                <div class="inline-radios" role="radiogroup" aria-label="Legacy Safeguard presented?"><label><input name="legacySafeguardPresented" type="radio" value="Yes"> Yes</label><label><input name="legacySafeguardPresented" type="radio" value="No"> No</label></div>
+              </div>
+              <div class="field">
+                <span>Referral asked?</span>
+                <div class="inline-radios" role="radiogroup" aria-label="Referral asked?"><label><input name="referralAsked" type="radio" value="Yes"> Yes</label><label><input name="referralAsked" type="radio" value="No"> No</label></div>
+              </div>
               <label class="field">Application status<select name="applicationStatus"><option value="In progress">In progress</option><option>Quote only</option><option>Submitted</option><option>Approved</option><option>Declined / postponed</option><option>Complete</option></select></label>
               <label class="field">Agent name<input name="agentName"></label>
-              <label class="field">Intake date<input name="applicationDate" type="date"></label>
+              <input name="applicationDate" type="hidden">
               <label class="field full">Additional notes<textarea name="applicationNotes"></textarea></label>
             </div>
             <p class="validation" id="validationMessage" aria-live="polite"></p>
@@ -407,7 +477,7 @@
       <div class="fields">
         <label class="field">Medication name<input data-name="name"></label>
         <label class="field">Reason / condition<input data-name="reason"></label>
-        <label class="field">Dose or notes<input data-name="details"></label>
+        <label class="field">Dosage? (optional)<input data-name="details"></label>
       </div>
     </div>
   </template>
@@ -426,9 +496,12 @@
       const schemaVersion = 1;
       const draftStorageKey = 'formora.application.draft.v1';
       const qualifierPreferenceKey = 'variscribe.call-script-qualifier.enabled.v1';
+      const themePreferenceKey = 'variscribe.theme.v1';
       const attachmentName = 'formora-data.json';
       const form = document.getElementById('applicationForm');
       const status = document.getElementById('status');
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
       const validationMessage = document.getElementById('validationMessage');
       const beneficiaryList = document.getElementById('beneficiaryList');
       const medicationList = document.getElementById('medicationList');
@@ -437,14 +510,16 @@
       const clientFields = ['firstName', 'middleName', 'lastName', 'dateOfBirth', 'age', 'sexForQuoting', 'residentState', 'birthState', 'weight', 'phonePrimary', 'phoneSecondary', 'canReceiveTexts', 'payeeInvolved', 'email', 'maritalStatus', 'streetAddress', 'city', 'mailingState', 'zipCode', 'callStatus'];
       const usStates = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
       const coverageFields = ['insuranceType', 'desiredCoverage', 'monthlyBudget', 'finalArrangement', 'hasExistingCoverage', 'existingCarrier', 'existingCoverageAmount', 'existingPremium', 'existingEffectiveDate', 'replacementConsideration', 'quotedCoverage', 'quotedPremium'];
+      const existingCoverageDetailFields = ['existingCarrier', 'existingCoverageAmount', 'existingPremium', 'existingEffectiveDate'];
       const healthFields = ['tobaccoUse', 'tobaccoDetails', 'recentHospitalization', 'hospitalizationCount', 'careFacility', 'mobilityAssistance', 'legalHistory', 'underwritingDetails'];
-      const financeFields = ['employmentStatus', 'incomeSource', 'monthlyIncome', 'bankName', 'accountType', 'draftDate', 'paymentFrequency', 'initialPaymentDate', 'bankAvailable', 'alternatePaymentMethod', 'paymentDetails'];
+      const financeFields = ['employmentStatus', 'incomeSource', 'monthlyIncome', 'bankName', 'accountType', 'draftDate', 'initialPaymentDate', 'bankAvailable', 'alternatePaymentMethod', 'paymentDetails'];
       const policyFields = ['carrier', 'productName', 'policyCoverage', 'policyPremium', 'effectiveDate', 'policyNumber', 'applicationStatus', 'agentName', 'applicationDate', 'applicationNotes'];
       const additionalFields = ['additionalName', 'additionalDob', 'additionalSex', 'additionalHeight', 'additionalWeight', 'additionalTobacco', 'additionalHealthNotes'];
       const conditions = [
+        'Organ transplant', 'Dementia or memory disorder', 'Diagnosed with AIDS or HIV?',
         'Heart attack, stroke, or blood clot', 'Heart disease or heart failure', 'Cancer', 'Diabetes',
-        'Lung disease (asthma/COPD/Emphysema)', 'Oxygen use', 'Kidney or liver condition', 'Mental health condition',
-        'Dementia or memory disorder', 'Alcohol or drug abuse', 'Organ transplant', 'Other significant condition',
+        'Lung disease (Asthma/COPD/Emphysema)', 'Oxygen use', 'Kidney or liver condition', 'Mental health condition',
+        'Alcohol or drug abuse', 'Other significant condition',
       ];
 
       function setStatus(message) {
@@ -457,6 +532,38 @@
         setStatus('Unsaved changes');
       }
 
+      function updateExistingCoverageFields() {
+        const disabled = form.elements.namedItem('hasExistingCoverage').value === 'No';
+        for (const name of existingCoverageDetailFields) {
+          const control = form.elements.namedItem(name);
+          control.disabled = disabled;
+          control.closest('.field').classList.toggle('is-disabled', disabled);
+        }
+      }
+
+      function updateBankPaymentWarning() {
+        const selected = form.querySelector('input[name="bankAvailable"]:checked')?.value;
+        document.getElementById('bankPaymentWarning').hidden = selected !== 'No';
+      }
+
+      function syncInsuranceTypeFields(source = form.elements.namedItem('insuranceType')) {
+        const destination = source.id === 'clientInsuranceType'
+          ? form.elements.namedItem('insuranceType')
+          : document.getElementById('clientInsuranceType');
+        destination.value = source.value;
+      }
+
+      function hostLocalDate() {
+        const date = new Date();
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      }
+
+      function enforceDiabetesNeuropathy() {
+        const medicationAnswer = document.querySelector('#conditionList [data-field="gabapentinOrLyrica"]');
+        const complicationSelect = document.querySelector('#conditionList [data-field="diabetesComplication"]');
+        if (medicationAnswer.value === 'Yes') complicationSelect.value = 'Neuropathy';
+      }
+
       function buildConditionRows() {
         const body = document.getElementById('conditionList');
         for (const [index, condition] of conditions.entries()) {
@@ -467,13 +574,31 @@
           row.innerHTML = `<td></td><td><div class="present-options" role="radiogroup" aria-label="Present? ${condition}"><label><input type="radio" name="${presentName}" data-field="present" value="Yes"> Yes</label><label><input type="radio" name="${presentName}" data-field="present" value="No"> No</label></div></td><td><input data-field="diagnosisDate" placeholder="Date or year"></td><td><input data-field="details" placeholder="Treatment or details"></td>`;
           row.cells[0].textContent = condition;
           body.append(row);
+          updateConditionRowState(row);
           if (condition === 'Diabetes') {
             const complicationsRow = document.createElement('tr');
             complicationsRow.className = 'condition-complications';
-            complicationsRow.innerHTML = '<td>Complications?</td><td></td><td><select data-field="diabetesComplication" aria-label="Diabetes complication"><option value="">Select</option><option>None</option><option>Retinopathy</option><option>Neuropathy</option><option>Nephropathy</option><option>Amputation</option></select></td><td></td>';
+            complicationsRow.innerHTML = '<td>Complications?</td><td></td><td><select data-field="diabetesComplication" aria-label="Diabetes complication"><option value="">Select</option><option>None</option><option>Retinopathy</option><option>Neuropathy</option><option>Nephropathy</option><option>Amputation</option></select></td><td><select data-field="gabapentinOrLyrica" aria-label="Gabapentin or Lyrica?"><option value="" selected disabled>Gabapentin or Lyrica?</option><option>Yes</option><option>No</option></select></td>';
             body.append(complicationsRow);
+            updateDiabetesComplicationsState();
           }
         }
+      }
+
+      function updateConditionRowState(row) {
+        const isPresent = row.querySelector('[data-field="present"]:checked')?.value === 'Yes';
+        row.classList.toggle('is-inactive', !isPresent);
+        for (const field of row.querySelectorAll('[data-field="diagnosisDate"], [data-field="details"]')) field.disabled = !isPresent;
+        if (row.dataset.condition === 'Diabetes') updateDiabetesComplicationsState();
+      }
+
+      function updateDiabetesComplicationsState() {
+        const diabetesRow = document.querySelector('#conditionList .condition-row[data-condition="Diabetes"]');
+        const complicationsRow = document.querySelector('#conditionList .condition-complications');
+        if (!diabetesRow || !complicationsRow) return;
+        const isPresent = diabetesRow.querySelector('[data-field="present"]:checked')?.value === 'Yes';
+        complicationsRow.classList.toggle('is-inactive', !isPresent);
+        for (const field of complicationsRow.querySelectorAll('select')) field.disabled = !isPresent;
       }
 
       function addRepeatRow(kind, values = {}) {
@@ -484,9 +609,17 @@
         for (const input of row.querySelectorAll('[data-name]')) input.value = values[input.dataset.name] || '';
         row.querySelector('.remove-row').addEventListener('click', () => {
           row.remove();
+          if (!isBeneficiary) updateMedicationLimit();
           markDirty();
         });
         container.append(row);
+        if (!isBeneficiary) updateMedicationLimit();
+      }
+
+      function updateMedicationLimit() {
+        const addButton = document.getElementById('addMedication');
+        addButton.disabled = medicationList.children.length >= 20;
+        addButton.title = addButton.disabled ? 'A maximum of 20 medications can be added.' : '';
       }
 
       function fieldValues(names) {
@@ -535,12 +668,16 @@
 
       function collectApplication() {
         const additionalEnabled = document.getElementById('additionalEnabled').checked;
+        syncInsuranceTypeFields();
         const client = fieldValues(clientFields);
         client.height = formatHeight();
         const healthResponses = fieldValues(healthFields);
         if (!healthResponses.mobilityAssistance) healthResponses.mobilityAssistance = form.elements.namedItem('legacyMobilityAssistance').value;
         const finances = fieldValues(financeFields);
         if (!finances.draftDate) finances.draftDate = form.elements.namedItem('legacyDraftDate').value;
+        const application = fieldValues(policyFields);
+        application.applicationDate = hostLocalDate();
+        form.elements.namedItem('applicationDate').value = application.applicationDate;
         return {
           schemaVersion,
           client,
@@ -549,6 +686,7 @@
           health: {
             responses: healthResponses,
             diabetesComplication: document.querySelector('#conditionList .condition-complications [data-field="diabetesComplication"]').value,
+            gabapentinOrLyrica: document.querySelector('#conditionList .condition-complications [data-field="gabapentinOrLyrica"]').value,
             conditions: [...document.querySelectorAll('#conditionList .condition-row')].map(row => {
               const condition = {
                 condition: row.dataset.condition,
@@ -562,7 +700,7 @@
             medications: repeatValues(medicationList, ['name', 'reason', 'details']),
           },
           finances,
-          application: fieldValues(policyFields),
+          application,
           additionalInsured: {
             enabled: additionalEnabled,
             details: additionalEnabled ? fieldValues(additionalFields) : {},
@@ -593,6 +731,8 @@
         restoreFields(clientFields, { ...data.client, payeeInvolved: data.client?.payeeInvolved ?? data.finances?.payeeInvolved ?? '' });
         restoreHeight(data.client?.height);
         restoreFields(coverageFields, data.coverage);
+        syncInsuranceTypeFields();
+        updateExistingCoverageFields();
         const existingPolicyYear = String(data.coverage?.existingEffectiveDate || '').match(/^(\d{4})/);
         if (existingPolicyYear) form.elements.namedItem('existingEffectiveDate').value = existingPolicyYear[1];
         restoreFields(healthFields, data.health?.responses);
@@ -608,6 +748,7 @@
           form.elements.namedItem('hospitalizationCount').value = '0';
         }
         restoreFields(financeFields, data.finances);
+        updateBankPaymentWarning();
         const savedDraftDate = String(data.finances?.draftDate ?? '');
         const draftDateSelect = form.elements.namedItem('draftDate');
         const legacyDraftDate = form.elements.namedItem('legacyDraftDate');
@@ -623,7 +764,7 @@
         medicationList.replaceChildren();
         for (const medication of data.health?.medications || []) addRepeatRow('medication', medication);
 
-          const conditionValues = new Map((data.health?.conditions || []).map(item => [item.condition === 'COPD or respiratory condition' || item.condition === 'Lung disease (asthma/COPD only)' ? 'Lung disease (asthma/COPD/Emphysema)' : item.condition === 'Diabetes or complications' ? 'Diabetes' : item.condition, item]));
+          const conditionValues = new Map((data.health?.conditions || []).map(item => [item.condition === 'COPD or respiratory condition' || item.condition === 'Lung disease (asthma/COPD only)' || item.condition === 'Lung disease (asthma/COPD/Emphysema)' ? 'Lung disease (Asthma/COPD/Emphysema)' : item.condition === 'Diabetes or complications' ? 'Diabetes' : item.condition === 'Diagnosed with Aids or HIV?' ? 'Diagnosed with AIDS or HIV?' : item.condition, item]));
         for (const row of document.querySelectorAll('#conditionList .condition-row')) {
           const item = conditionValues.get(row.dataset.condition) || {};
           for (const input of row.querySelectorAll('[data-field="present"]')) input.checked = input.value === item.present;
@@ -631,6 +772,8 @@
           row.querySelector('[data-field="details"]').value = item.details || '';
         }
         document.querySelector('#conditionList .condition-complications [data-field="diabetesComplication"]').value = data.health?.diabetesComplication || conditionValues.get('Diabetes')?.complication || '';
+        document.querySelector('#conditionList .condition-complications [data-field="gabapentinOrLyrica"]').value = data.health?.gabapentinOrLyrica || '';
+        enforceDiabetesNeuropathy();
 
         const additionalEnabled = Boolean(data.additionalInsured?.enabled);
         document.getElementById('additionalEnabled').checked = additionalEnabled;
@@ -718,6 +861,7 @@
         const contentWidth = pageWidth - margin * 2;
         const border = PDFLib.rgb(0.35, 0.39, 0.42);
         const bandFill = PDFLib.rgb(0.204, 0.227, 0.251);
+        const overflowGreen = PDFLib.rgb(0.10, 0.38, 0.29);
         const headerFill = PDFLib.rgb(0.88, 0.91, 0.97);
         const rowFill = PDFLib.rgb(0.95, 0.96, 0.99);
         const plainFill = PDFLib.rgb(1, 1, 1);
@@ -746,9 +890,9 @@
           page.drawText(intakeDateText, { x: pageWidth - margin - font.widthOfTextAtSize(intakeDateText, 7.5), y: pageHeight - 44, size: 7.5, font, color: border });
         }
 
-        function drawSection(page, top, title) {
+        function drawSection(page, top, title, fill = bandFill) {
           const height = 17;
-          page.drawRectangle({ x: margin, y: pageHeight - top - height, width: contentWidth, height, color: bandFill, borderColor: border, borderWidth: 0.4 });
+          page.drawRectangle({ x: margin, y: pageHeight - top - height, width: contentWidth, height, color: fill, borderColor: border, borderWidth: 0.4 });
           page.drawText(title.toUpperCase(), { x: margin + 5, y: pageHeight - top - 12, size: 7.5, font: boldFont, color: plainFill });
           return top + height;
         }
@@ -773,7 +917,7 @@
           return top + height;
         }
 
-        function drawTable(page, top, headers, rows, widths) {
+        function drawTable(page, top, headers, rows, widths, mutedRows = []) {
           const headerHeight = 18;
           let x = margin;
           headers.forEach((header, index) => {
@@ -788,11 +932,13 @@
             const cellLines = row.map((value, index) => value === '' || value === null || value === undefined ? [] : wrapText(String(value), font, 6.5, widths[index] - 6));
             const maxLines = Math.max(1, ...cellLines.map(lines => lines.length));
             const rowHeight = Math.max(17, Math.min(31, maxLines * 7 + 6));
+            const isMuted = mutedRows[rowIndex] === true;
             let cellX = margin;
             row.forEach((value, index) => {
               const width = widths[index];
               const bottom = pageHeight - top - rowHeight;
-              page.drawRectangle({ x: cellX, y: bottom, width, height: rowHeight, color: rowIndex % 2 ? plainFill : rowFill, borderColor: border, borderWidth: 0.35 });
+              const isMutedCell = isMuted && index >= 3;
+              page.drawRectangle({ x: cellX, y: bottom, width, height: rowHeight, color: isMutedCell ? PDFLib.rgb(0.45, 0.47, 0.46) : rowIndex % 2 ? plainFill : rowFill, opacity: isMutedCell ? 0.16 : 1, borderColor: border, borderWidth: 0.35 });
               const lines = cellLines[index].slice(0, Math.floor((rowHeight - 5) / 7));
               lines.forEach((line, lineIndex) => page.drawText(line, { x: cellX + 3, y: bottom + rowHeight - 8 - lineIndex * 7, size: 6.5, font, color: border, maxWidth: width - 6 }));
               cellX += width;
@@ -802,13 +948,23 @@
           return top;
         }
 
+        function orderedBeneficiaries() {
+          return (data.beneficiaries || []).filter(item => item.fullName?.trim()).slice().sort((first, second) => {
+            const firstOrder = first.designation === 'Contingent' ? 1 : 0;
+            const secondOrder = second.designation === 'Contingent' ? 1 : 0;
+            return firstOrder - secondOrder;
+          });
+        }
+
         function beneficiarySummary() {
-          return (data.beneficiaries || []).filter(item => item.fullName).map(item => {
+          const beneficiaries = orderedBeneficiaries();
+          if (beneficiaries.length > 4) return 'See overflow form';
+          return beneficiaries.map(item => {
             const relationship = item.relationship ? `, ${item.relationship}` : '';
             const designation = item.designation ? ` - ${item.designation}` : '';
             const allocation = item.allocation ? ` (${item.allocation}%)` : '';
             return `${item.fullName}${relationship}${designation}${allocation}`;
-          }).join('; ') || 'Not provided';
+          }).join(', ') || 'Not provided';
         }
 
         function drawBeneficiary(page, top) {
@@ -818,14 +974,19 @@
 
         function drawConditions(page, top, health) {
           top = drawSection(page, top, 'Medical conditions');
-          const byCondition = new Map((health.conditions || []).map(item => [item.condition === 'COPD or respiratory condition' || item.condition === 'Lung disease (asthma/COPD only)' ? 'Lung disease (asthma/COPD/Emphysema)' : item.condition === 'Diabetes or complications' ? 'Diabetes' : item.condition, item]));
+          const byCondition = new Map((health.conditions || []).map(item => [item.condition === 'COPD or respiratory condition' || item.condition === 'Lung disease (asthma/COPD only)' || item.condition === 'Lung disease (asthma/COPD/Emphysema)' ? 'Lung disease (Asthma/COPD/Emphysema)' : item.condition === 'Diabetes or complications' ? 'Diabetes' : item.condition, item]));
           const rows = [];
+          const mutedRows = [];
           for (const name of conditions) {
             const item = byCondition.get(name) || {};
             rows.push([name, item.present === 'Yes' ? 'X' : '', item.present === 'No' ? 'X' : '', item.diagnosisDate || '', item.details || '']);
-            if (name === 'Diabetes') rows.push(['Complications?', '', '', item.complication || '', '']);
+            mutedRows.push(item.present !== 'Yes');
+            if (name === 'Diabetes') {
+              rows.push(['Complications?', '', '', item.complication || '', health.gabapentinOrLyrica ? `Gabapentin or Lyrica: ${health.gabapentinOrLyrica}` : '']);
+              mutedRows.push(item.present !== 'Yes');
+            }
           }
-          return drawTable(page, top, ['Condition', 'Yes', 'No', 'Diagnosis date', 'Treatment / details'], rows, [132, 30, 30, 76, 288]);
+          return drawTable(page, top, ['Condition', 'Yes', 'No', 'Diagnosis date', 'Treatment / details'], rows, [132, 30, 30, 76, 288], mutedRows);
         }
 
         function drawMedicationGrid(page, top, medications) {
@@ -879,12 +1040,12 @@
           top = drawBeneficiary(page, top);
 
           top = drawSection(page, top, 'Coverage');
-          top = drawFieldRow(page, top, [['Insurance type', coverage.insuranceType, 130], ['Desired coverage ($)', coverage.desiredCoverage, 150], ['Final arrangement', coverage.finalArrangement, 130], ['Replacement?', coverage.replacementConsideration, 156]]);
+          top = drawFieldRow(page, top, [['Insurance type', coverage.insuranceType, 130], ['Desired coverage ($)', coverage.desiredCoverage, 150], ['Final arrangement', coverage.finalArrangement, 130], ['Replacement?', coverage.replacementConsideration, 146]]);
           top = drawFieldRow(page, top, [['Existing coverage?', coverage.hasExistingCoverage, 102], ['Existing carrier', coverage.existingCarrier, 132], ['Existing amount ($)', coverage.existingCoverageAmount, 104], ['Existing premium ($)', coverage.existingPremium, 104], ['Existing policy year', coverage.existingEffectiveDate, 114]]);
 
           top = drawSection(page, top, 'Financial and policy details');
           top = drawFieldRow(page, top, [['Employment status', finances.employmentStatus, 100], ['Income source', finances.incomeSource, 146], ['Monthly income ($)', finances.monthlyIncome, 104], ['Bank / credit union', finances.bankName, 126], ['Account type', finances.accountType, 80]]);
-          top = drawFieldRow(page, top, [['Payment frequency', finances.paymentFrequency, 120], ['Draft date', finances.draftDate, 160], ['Initial payment date', finances.initialPaymentDate, 130], ['Bank available?', finances.bankAvailable, 146]]);
+          top = drawFieldRow(page, top, [['Draft date', finances.draftDate, 160], ['Initial payment date', finances.initialPaymentDate, 130], ['Bank available?', finances.bankAvailable, 146]]);
           top = drawFieldRow(page, top, [['Carrier', application.carrier, 90], ['Product', application.productName, 100], ['Policy amount ($)', application.policyCoverage, 90], ['Premium ($)', application.policyPremium, 80], ['Effective date', application.effectiveDate, 90], ['Policy number', application.policyNumber, 106]]);
           top = drawFieldRow(page, top, [['Application status', application.applicationStatus, 124], ['Agent name', application.agentName, 150], ['Intake date', application.applicationDate, 112], ['Quoted coverage ($)', coverage.quotedCoverage, 90], ['Quoted premium ($)', coverage.quotedPremium, 80]]);
         }
@@ -913,8 +1074,55 @@
           drawInsuredPage(client, health, 'CLIENT #2 - ADDITIONAL INSURED', true);
         }
 
+        function drawOverflowPage() {
+          const page = pdf.addPage([pageWidth, pageHeight]);
+          const client = data.client || {};
+          const clientName = [client.firstName, client.middleName, client.lastName].filter(Boolean).join(' ');
+          const logoWidth = 78;
+          const logoHeight = 52;
+          const detailsX = margin + logoWidth + 10;
+          page.drawImage(logoImage, { x: margin, y: pageHeight - logoHeight, width: logoWidth, height: logoHeight });
+          page.drawText(`Client: ${display(clientName)}`, { x: detailsX, y: pageHeight - 22, size: 10, font: boldFont, color: border });
+          const clientDetails = `Date of birth: ${display(client.dateOfBirth)} | Phone: ${display(client.phonePrimary)}`;
+          page.drawText(clientDetails, { x: detailsX, y: pageHeight - 39, size: 8, font, color: border, maxWidth: contentWidth - logoWidth - 10 });
+          const headerTop = 58;
+          const headerHeight = 18;
+          page.drawRectangle({ x: margin, y: pageHeight - headerTop - headerHeight, width: contentWidth, height: headerHeight, color: overflowGreen, borderColor: border, borderWidth: 0.4 });
+          page.drawText('OVERFLOW FORM', { x: margin + 5, y: pageHeight - headerTop - 12, size: 8, font: boldFont, color: plainFill });
+          let top = headerTop + headerHeight;
+
+          const medications = (data.health?.medications || []).slice(12, 20);
+          if (medications.length) {
+            top = drawSection(page, top, 'Additional medications');
+            const rows = medications.map((medication, index) => [
+              String(index + 13),
+              medication.name || '',
+              medication.reason || '',
+              medication.details || '',
+            ]);
+            top = drawTable(page, top, ['#', 'Medication', 'Reason / condition', 'Dosage / notes'], rows, [26, 164, 170, 196]);
+          }
+
+          const beneficiaries = orderedBeneficiaries();
+          if (beneficiaries.length > 4) {
+            top = drawSection(page, top, 'Beneficiaries');
+            for (const designation of ['Primary', 'Contingent']) {
+              const group = beneficiaries.filter(item => (item.designation === 'Contingent' ? 'Contingent' : 'Primary') === designation);
+              if (!group.length) continue;
+              top = drawSection(page, top, `${designation} beneficiaries`, overflowGreen);
+              const total = group.reduce((sum, item) => sum + (Number(item.allocation) || 0), 0);
+              const totalText = Number.isInteger(total) ? String(total) : total.toFixed(2);
+              const rows = group.map(item => [item.fullName || '', item.relationship || '', item.allocation ? `${item.allocation}%` : '']);
+              rows.push(['Total', '', `${totalText}%`]);
+              top = drawTable(page, top, ['Beneficiary', 'Relationship', 'Allocation'], rows, [290, 190, 76]);
+            }
+          }
+        }
+
         drawPrimaryPage();
         if (data.additionalInsured?.enabled) drawAdditionalPage();
+        const namedBeneficiaries = orderedBeneficiaries();
+        if ((data.health?.medications || []).length > 12 || namedBeneficiaries.length > 4) drawOverflowPage();
         await pdf.attach(new TextEncoder().encode(JSON.stringify(data)), attachmentName, {
           mimeType: 'application/json',
           description: 'Editable VariScribe application data',
@@ -981,6 +1189,22 @@
         pdfProtectionResolve = null;
         if (pdfProtectionDialog.open) pdfProtectionDialog.close();
         resolve?.(value);
+      }
+
+      function applyTheme(theme) {
+        const isDark = theme === 'dark';
+        const currentTheme = isDark ? 'dark' : 'light';
+        document.documentElement.dataset.theme = currentTheme;
+        themeIcon.src = isDark ? '/variscribe-moon.png' : '/nobackgroundlightmode.png';
+        themeToggle.setAttribute('aria-label', `Toggle color theme, currently ${currentTheme}`);
+        themeToggle.title = `Switch to ${isDark ? 'light' : 'dark'} mode`;
+        document.querySelector('meta[name="theme-color"]').content = isDark ? '#1e1e1e' : '#183b3a';
+      }
+
+      function restoreTheme() {
+        let theme = 'light';
+        try { theme = localStorage.getItem(themePreferenceKey) || 'light'; } catch {}
+        applyTheme(theme === 'dark' ? 'dark' : 'light');
       }
 
       function updateQualifierToggle() {
@@ -1159,6 +1383,7 @@
         markDirty();
       });
       document.getElementById('addMedication').addEventListener('click', () => {
+        if (medicationList.children.length >= 20) return;
         addRepeatRow('medication');
         markDirty();
       });
@@ -1173,7 +1398,22 @@
         form.elements.namedItem('legacyMobilityAssistance').value = '';
       });
       form.addEventListener('input', markDirty);
-      form.addEventListener('change', markDirty);
+      form.addEventListener('change', event => {
+        if (event.target.matches('[data-field="diabetesComplication"]') && event.target.value === 'None') {
+          document.querySelector('#conditionList [data-field="gabapentinOrLyrica"]').value = '';
+        }
+        if (event.target.matches('[data-field="gabapentinOrLyrica"], [data-field="diabetesComplication"]')) enforceDiabetesNeuropathy();
+        if (event.target.matches('[data-field="present"]')) updateConditionRowState(event.target.closest('.condition-row'));
+        if (event.target.name === 'hasExistingCoverage') updateExistingCoverageFields();
+        if (event.target.name === 'bankAvailable') updateBankPaymentWarning();
+        if (event.target.name === 'insuranceType' || event.target.id === 'clientInsuranceType') syncInsuranceTypeFields(event.target);
+        markDirty();
+      });
+      themeToggle.addEventListener('click', () => {
+        const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        applyTheme(theme);
+        try { localStorage.setItem(themePreferenceKey, theme); } catch {}
+      });
       document.getElementById('additionalEnabled').addEventListener('change', event => {
         const fieldset = document.getElementById('additionalFields');
         fieldset.hidden = !event.target.checked;
@@ -1194,14 +1434,19 @@
       function resetApplication() {
         if (isDirty && !window.confirm('Discard unsaved changes and start a new application?')) return;
         form.reset();
+        syncInsuranceTypeFields();
         beneficiaryList.replaceChildren();
         medicationList.replaceChildren();
+        updateMedicationLimit();
         for (const row of document.querySelectorAll('#conditionList .condition-row')) {
           for (const input of row.querySelectorAll('[data-field="present"]')) input.checked = false;
           row.querySelector('[data-field="diagnosisDate"]').value = '';
           row.querySelector('[data-field="details"]').value = '';
         }
         document.querySelector('#conditionList .condition-complications [data-field="diabetesComplication"]').value = '';
+        document.querySelector('#conditionList .condition-complications [data-field="gabapentinOrLyrica"]').value = '';
+        updateExistingCoverageFields();
+        updateBankPaymentWarning();
         document.getElementById('additionalFields').hidden = true;
         document.getElementById('additionalFields').disabled = true;
         validationMessage.textContent = '';
@@ -1220,6 +1465,10 @@
       buildConditionRows();
       addRepeatRow('beneficiary', { designation: 'Primary' });
       restoreDraft();
+      updateMedicationLimit();
+      updateExistingCoverageFields();
+      updateBankPaymentWarning();
+      restoreTheme();
       restoreQualifierPreference();
     })();
   </script>
