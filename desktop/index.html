@@ -259,15 +259,12 @@
               <div class="field"><span>Can receive texts?</span><div class="inline-radios" role="radiogroup" aria-label="Can receive texts?"><label><input name="canReceiveTexts" type="radio" value="Yes"> Yes</label><label><input name="canReceiveTexts" type="radio" value="No"> No</label></div></div>
               <div class="field"><span>Power of attorney or payee involved?</span><div class="inline-radios" role="radiogroup" aria-label="Power of attorney or payee involved?"><label><input name="payeeInvolved" type="radio" value="Yes"> Yes</label><label><input name="payeeInvolved" type="radio" value="No"> No</label></div></div>
               <label class="field wide">Email<input name="email" type="email" autocomplete="email"></label>
-              <div class="marital-insurance-group">
-                <label class="field">Marital status<select name="maritalStatus"><option value="">Select</option><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option><option>Separated</option></select></label>
-                <label class="field">Insurance type<select id="clientInsuranceType" aria-label="Insurance type"><option value="">Select</option><option>Final expense</option><option>Whole life</option><option>Term life</option></select></label>
-              </div>
+              <label class="field">Marital status<select name="maritalStatus"><option value="">Select</option><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option><option>Separated</option></select></label>
               <label class="field wide">Physical street address<input name="streetAddress" autocomplete="street-address"></label>
               <label class="field">City<input name="city" autocomplete="address-level2"></label>
               <label class="field">State<select name="mailingState" data-us-state autocomplete="address-level1"><option value="">Select a state</option></select></label>
               <label class="field">ZIP code<input name="zipCode" autocomplete="postal-code"></label>
-              <label class="field">Looking for which policy type?<select id="policyTypeInterest" aria-label="Looking for which policy type?"><option value="">Select</option><option>Final expense</option><option>Whole life</option><option>Term life</option></select></label>
+              <label class="field">Looking for which policy type?<select id="policyTypeInterest" name="policyTypeInterest"><option value="">Select</option><option>Final expense</option><option>Whole life</option><option>Term life</option></select></label>
             </div>
           </section>
 
@@ -508,7 +505,7 @@
       const medicationList = document.getElementById('medicationList');
       let isDirty = false;
 
-      const clientFields = ['firstName', 'middleName', 'lastName', 'dateOfBirth', 'age', 'sexForQuoting', 'residentState', 'birthState', 'weight', 'phonePrimary', 'phoneSecondary', 'canReceiveTexts', 'payeeInvolved', 'email', 'maritalStatus', 'streetAddress', 'city', 'mailingState', 'zipCode', 'callStatus'];
+      const clientFields = ['firstName', 'middleName', 'lastName', 'dateOfBirth', 'age', 'sexForQuoting', 'residentState', 'birthState', 'weight', 'phonePrimary', 'phoneSecondary', 'canReceiveTexts', 'payeeInvolved', 'email', 'maritalStatus', 'policyTypeInterest', 'streetAddress', 'city', 'mailingState', 'zipCode', 'callStatus'];
       const usStates = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
       const coverageFields = ['insuranceType', 'desiredCoverage', 'monthlyBudget', 'finalArrangement', 'hasExistingCoverage', 'existingCarrier', 'existingCoverageAmount', 'existingPremium', 'existingEffectiveDate', 'replacementConsideration', 'quotedCoverage', 'quotedPremium'];
       const existingCoverageDetailFields = ['existingCarrier', 'existingCoverageAmount', 'existingPremium', 'existingEffectiveDate'];
@@ -557,13 +554,6 @@
       function updateBankPaymentWarning() {
         const selected = form.querySelector('input[name="bankAvailable"]:checked')?.value;
         document.getElementById('bankPaymentWarning').hidden = selected !== 'No';
-      }
-
-      function syncInsuranceTypeFields(source = form.elements.namedItem('insuranceType')) {
-        const destination = source.id === 'clientInsuranceType'
-          ? form.elements.namedItem('insuranceType')
-          : document.getElementById('clientInsuranceType');
-        destination.value = source.value;
       }
 
       function hostLocalDate() {
@@ -681,7 +671,6 @@
 
       function collectApplication() {
         const additionalEnabled = document.getElementById('additionalEnabled').checked;
-        syncInsuranceTypeFields();
         const client = fieldValues(clientFields);
         client.height = formatHeight();
         const healthResponses = fieldValues(healthFields);
@@ -744,7 +733,6 @@
         restoreFields(clientFields, { ...data.client, payeeInvolved: data.client?.payeeInvolved ?? data.finances?.payeeInvolved ?? '' });
         restoreHeight(data.client?.height);
         restoreFields(coverageFields, data.coverage);
-        syncInsuranceTypeFields();
         updateExistingCoverageFields();
         const existingPolicyYear = String(data.coverage?.existingEffectiveDate || '').match(/^(\d{4})/);
         if (existingPolicyYear) form.elements.namedItem('existingEffectiveDate').value = existingPolicyYear[1];
@@ -1046,7 +1034,7 @@
           top = drawFieldRow(page, top, [['Full name', name, 190], ['Date of birth', client.dateOfBirth, 78], ['Age', client.age, 42], ['Gender', client.sexForQuoting, 68], ['Height', client.height, 78], ['Weight (lb)', client.weight, 100]]);
           top = drawFieldRow(page, top, [['Primary phone', client.phonePrimary, 105], ['Secondary phone', client.phoneSecondary, 105], ['Email', client.email, 190], ['Can receive texts?', client.canReceiveTexts, 78], ['POA / payee?', client.payeeInvolved, 78]]);
           top = drawFieldRow(page, top, [['Physical street address', client.streetAddress, 292], ['City', client.city, 102], ['State', client.mailingState, 70], ['ZIP code', client.zipCode, 92]]);
-          top = drawFieldRow(page, top, [['Resident state', client.residentState, 150], ['State of birth', client.birthState, 150], ['Marital status', client.maritalStatus, 256]]);
+          top = drawFieldRow(page, top, [['Resident state', client.residentState, 150], ['State of birth', client.birthState, 150], ['Marital status', client.maritalStatus, 128], ['Looking for?', client.policyTypeInterest, 128]]);
           top = drawSection(page, top, 'Health and underwriting');
           const hospitalizationCount = responses.hospitalizationCount || (responses.recentHospitalization === 'No' ? '0' : responses.recentHospitalization === 'Yes' ? 'Count not recorded' : '');
           top = drawFieldRow(page, top, [['Tobacco / nicotine', responses.tobaccoUse, 72], ['Hospitalized overnight (last 12 months)', hospitalizationCount, 165], ['Mobility assistance', responses.mobilityAssistance, 75], ['Felony or DUI (last 5 years)', responses.legalHistory, 95], ['Nursing home / Home Health / Psychiatric facility', responses.careFacility, 149]]);
@@ -1057,7 +1045,7 @@
           top = drawBeneficiary(page, top);
 
           top = drawSection(page, top, 'Coverage');
-          top = drawFieldRow(page, top, [['Insurance type', coverage.insuranceType, 130], ['Desired coverage ($)', coverage.desiredCoverage, 150], ['Final arrangement', coverage.finalArrangement, 130], ['Replacement?', coverage.replacementConsideration, 146]]);
+          top = drawFieldRow(page, top, [['Existing insurance type', coverage.insuranceType, 130], ['Desired coverage ($)', coverage.desiredCoverage, 150], ['Final arrangement', coverage.finalArrangement, 130], ['Replacement?', coverage.replacementConsideration, 146]]);
           top = drawFieldRow(page, top, [['Existing coverage?', coverage.hasExistingCoverage, 102], ['Existing carrier', coverage.existingCarrier, 132], ['Existing amount ($)', coverage.existingCoverageAmount, 104], ['Existing premium ($)', coverage.existingPremium, 104], ['Existing policy year', coverage.existingEffectiveDate, 114]]);
 
           top = drawSection(page, top, 'Financial and policy details');
@@ -1430,7 +1418,6 @@
         if (event.target.matches('[data-field="present"]')) updateConditionRowState(event.target.closest('.condition-row'));
         if (event.target.name === 'hasExistingCoverage') updateExistingCoverageFields();
         if (event.target.name === 'bankAvailable') updateBankPaymentWarning();
-        if (event.target.name === 'insuranceType' || event.target.id === 'clientInsuranceType') syncInsuranceTypeFields(event.target);
         markDirty();
       });
       themeToggle.addEventListener('click', () => {
@@ -1458,7 +1445,6 @@
       function resetApplication() {
         if (isDirty && !window.confirm('Discard unsaved changes and start a new intake?')) return false;
         form.reset();
-        syncInsuranceTypeFields();
         beneficiaryList.replaceChildren();
         medicationList.replaceChildren();
         updateMedicationLimit();
