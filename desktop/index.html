@@ -206,10 +206,9 @@
     </header>
 
     <div class="toolbar" aria-label="Application actions">
-      <button class="primary" id="newApplication" type="button">New Application</button>
+      <button class="primary" id="newApplication" type="button">New Intake</button>
       <button id="openPdf" type="button">Edit Existing PDF</button>
       <button class="primary" id="savePdf" type="button">Save PDF</button>
-      <button id="resetApplication" type="button">Reset</button>
       <label class="qualifier-toggle" id="qualifierToggle" data-enabled="false">
         <input id="callScriptQualifier" type="checkbox" role="switch" aria-controls="bufferChecklistDialog">
         <span class="qualifier-track" aria-hidden="true"></span>
@@ -1457,7 +1456,7 @@
       document.getElementById('qualifierOkay').addEventListener('click', () => qualifierDialog.close());
       document.getElementById('qualifierCancel').addEventListener('click', () => qualifierDialog.close());
       function resetApplication() {
-        if (isDirty && !window.confirm('Discard unsaved changes and start a new application?')) return;
+        if (isDirty && !window.confirm('Discard unsaved changes and start a new intake?')) return false;
         form.reset();
         syncInsuranceTypeFields();
         beneficiaryList.replaceChildren();
@@ -1478,9 +1477,13 @@
         isDirty = false;
         try { localStorage.removeItem(draftStorageKey); } catch {}
         setStatus('Quickly add and save client info during calls.');
+        return true;
       }
-      document.getElementById('newApplication').addEventListener('click', resetApplication);
-      document.getElementById('resetApplication').addEventListener('click', resetApplication);
+      document.getElementById('newApplication').addEventListener('click', () => {
+        if (!resetApplication() || !qualifierToggle.checked) return;
+        resetQualifierChecklist();
+        if (!qualifierDialog.open) qualifierDialog.showModal();
+      });
       document.getElementById('openPdf').addEventListener('click', openPdf);
       document.getElementById('savePdf').addEventListener('click', savePdf);
 
