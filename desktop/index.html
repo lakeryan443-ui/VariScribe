@@ -872,6 +872,8 @@
         const pageWidth = 612;
         const pageHeight = 792;
         const margin = 28;
+        const headerHeight = 44;
+        const contentTop = margin + headerHeight + 6;
         const contentWidth = pageWidth - margin * 2;
         const border = PDFLib.rgb(0.35, 0.39, 0.42);
         const bandFill = PDFLib.rgb(0.204, 0.227, 0.251);
@@ -891,40 +893,40 @@
 
         function drawPageHeader(page, label, name, appDate, callStatus) {
           const logoWidth = 78;
-          const logoHeight = 52;
+          const logoHeight = headerHeight;
           const headerTextX = margin + logoWidth + 10;
-          page.drawRectangle({ x: margin, y: pageHeight - logoHeight, width: logoWidth, height: logoHeight, color: bandFill });
+          page.drawRectangle({ x: margin, y: pageHeight - margin - logoHeight, width: logoWidth, height: logoHeight, color: bandFill });
           const logoImageWidth = 60;
           const logoImageHeight = 40;
-          page.drawImage(logoImage, { x: margin + (logoWidth - logoImageWidth) / 2, y: pageHeight - logoHeight + (logoHeight - logoImageHeight) / 2, width: logoImageWidth, height: logoImageHeight });
-          page.drawText('CLIENT INFO SHEET', { x: headerTextX, y: pageHeight - 28, size: 14, font: boldFont, color: bandFill });
-          page.drawText(`${label} | ${display(name)}`, { x: headerTextX, y: pageHeight - 44, size: 9, font: boldFont, color: border });
+          page.drawImage(logoImage, { x: margin + (logoWidth - logoImageWidth) / 2, y: pageHeight - margin - logoHeight + (logoHeight - logoImageHeight) / 2, width: logoImageWidth, height: logoImageHeight });
+          page.drawText('CLIENT INFO SHEET', { x: headerTextX, y: pageHeight - margin - 12, size: 12, font: boldFont, color: bandFill });
+          page.drawText(`${label} | ${display(name)}`, { x: headerTextX, y: pageHeight - margin - 28, size: 8.5, font: boldFont, color: border });
           const callStatusText = `Call Status: ${display(callStatus)}`;
           const callStatusFontSize = 8.5;
-          page.drawText(callStatusText, { x: pageWidth - margin - boldFont.widthOfTextAtSize(callStatusText, callStatusFontSize), y: pageHeight - 28, size: callStatusFontSize, font: boldFont, color: PDFLib.rgb(0.72, 0.12, 0.15) });
+          page.drawText(callStatusText, { x: pageWidth - margin - boldFont.widthOfTextAtSize(callStatusText, callStatusFontSize), y: pageHeight - margin - 12, size: callStatusFontSize, font: boldFont, color: PDFLib.rgb(0.72, 0.12, 0.15) });
           const intakeDateText = `Intake date: ${display(appDate)}`;
-          page.drawText(intakeDateText, { x: pageWidth - margin - font.widthOfTextAtSize(intakeDateText, 7.5), y: pageHeight - 44, size: 7.5, font, color: border });
+          page.drawText(intakeDateText, { x: pageWidth - margin - font.widthOfTextAtSize(intakeDateText, 7.5), y: pageHeight - margin - 28, size: 7.5, font, color: border });
         }
 
         function drawSection(page, top, title, fill = bandFill) {
-          const height = 17;
+          const height = 15;
           page.drawRectangle({ x: margin, y: pageHeight - top - height, width: contentWidth, height, color: fill, borderColor: border, borderWidth: 0.4 });
-          page.drawText(title.toUpperCase(), { x: margin + 5, y: pageHeight - top - 12, size: 7.5, font: boldFont, color: plainFill });
+          page.drawText(title.toUpperCase(), { x: margin + 5, y: pageHeight - top - 10, size: 7.5, font: boldFont, color: plainFill });
           return top + height;
         }
 
         function drawField(page, x, top, width, height, label, value, fill = rowFill) {
           const bottom = pageHeight - top - height;
           page.drawRectangle({ x, y: bottom, width, height, color: fill, borderColor: border, borderWidth: 0.35 });
-          page.drawText(label, { x: x + 4, y: bottom + height - 8, size: 5.8, font: boldFont, color: border });
-          const lines = wrapText(display(value), font, 7.2, width - 8);
-          const maxLines = Math.max(1, Math.floor((height - 13) / 8));
+          page.drawText(label, { x: x + 4, y: bottom + height - 7, size: 5.8, font: boldFont, color: border });
+          const lines = wrapText(display(value), font, 6.8, width - 8);
+          const maxLines = Math.max(1, Math.floor((height - 11) / 7));
           const shown = lines.slice(0, maxLines);
           if (lines.length > maxLines && shown.length) shown[shown.length - 1] = `${shown[shown.length - 1].slice(0, Math.max(1, shown[shown.length - 1].length - 3))}...`;
-          shown.forEach((line, index) => page.drawText(line, { x: x + 4, y: bottom + height - 17 - index * 8, size: 7.2, font, color: border, maxWidth: width - 8 }));
+          shown.forEach((line, index) => page.drawText(line, { x: x + 4, y: bottom + height - 15 - index * 7, size: 6.8, font, color: border, maxWidth: width - 8 }));
         }
 
-        function drawFieldRow(page, top, fields, height = 20) {
+        function drawFieldRow(page, top, fields, height = 18) {
           let x = margin;
           for (const [label, value, width] of fields) {
             drawField(page, x, top, width, height, label, value);
@@ -934,7 +936,7 @@
         }
 
         function drawTable(page, top, headers, rows, widths, mutedRows = []) {
-          const headerHeight = 18;
+          const headerHeight = 16;
           let x = margin;
           headers.forEach((header, index) => {
             const width = widths[index];
@@ -947,7 +949,7 @@
           rows.forEach((row, rowIndex) => {
             const cellLines = row.map((value, index) => value === '' || value === null || value === undefined ? [] : wrapText(String(value), font, 6.5, widths[index] - 6));
             const maxLines = Math.max(1, ...cellLines.map(lines => lines.length));
-            const rowHeight = Math.max(17, Math.min(31, maxLines * 7 + 6));
+            const rowHeight = Math.max(15, Math.min(31, maxLines * 7 + 4));
             const isMuted = mutedRows[rowIndex] === true;
             let cellX = margin;
             row.forEach((value, index) => {
@@ -955,8 +957,8 @@
               const bottom = pageHeight - top - rowHeight;
               const isMutedCell = isMuted && index >= 3;
               page.drawRectangle({ x: cellX, y: bottom, width, height: rowHeight, color: isMutedCell ? PDFLib.rgb(0.45, 0.47, 0.46) : rowIndex % 2 ? plainFill : rowFill, opacity: isMutedCell ? 0.16 : 1, borderColor: border, borderWidth: 0.35 });
-              const lines = cellLines[index].slice(0, Math.floor((rowHeight - 5) / 7));
-              lines.forEach((line, lineIndex) => page.drawText(line, { x: cellX + 3, y: bottom + rowHeight - 8 - lineIndex * 7, size: 6.5, font, color: border, maxWidth: width - 6 }));
+              const lines = cellLines[index].slice(0, Math.floor((rowHeight - 4) / 7));
+              lines.forEach((line, lineIndex) => page.drawText(line, { x: cellX + 3, y: bottom + rowHeight - 7 - lineIndex * 7, size: 6.5, font, color: border, maxWidth: width - 6 }));
               cellX += width;
             });
             top += rowHeight;
@@ -1010,7 +1012,7 @@
           const columns = 4;
           const rows = 3;
           const cellWidth = contentWidth / columns;
-          const cellHeight = 32;
+          const cellHeight = 28;
           for (let index = 0; index < columns * rows; index++) {
             const medication = medications[index];
             const x = margin + (index % columns) * cellWidth;
@@ -1040,7 +1042,7 @@
           const page = pdf.addPage([pageWidth, pageHeight]);
           const name = [client.firstName, client.middleName, client.lastName].filter(Boolean).join(' ');
           drawPageHeader(page, pageLabel, name, application.applicationDate, client.callStatus);
-          let top = 52;
+          let top = contentTop;
           top = drawSection(page, top, 'Client information');
           top = drawFieldRow(page, top, [['Full name', name, 190], ['Date of birth', client.dateOfBirth, 78], ['Age', client.age, 42], ['Gender', client.sexForQuoting, 68], ['Height', client.height, 78], ['Weight (lb)', client.weight, 100]]);
           top = drawFieldRow(page, top, [['Primary phone', client.phonePrimary, 105], ['Secondary phone', client.phoneSecondary, 105], ['Email', client.email, 190], ['Can receive texts?', client.canReceiveTexts, 78], ['POA / payee?', client.payeeInvolved, 78]]);
@@ -1051,7 +1053,7 @@
           top = drawFieldRow(page, top, [['Tobacco / nicotine', responses.tobaccoUse, 72], ['Hospitalized overnight (last 12 months)', hospitalizationCount, 165], ['Mobility assistance', responses.mobilityAssistance, 75], ['Felony or DUI (last 5 years)', responses.legalHistory, 95], ['Nursing home / Home Health / Psychiatric facility', responses.careFacility, 149]]);
           top = drawConditions(page, top, health);
           top = drawMedicationGrid(page, top, health.medications || []);
-          top = drawFieldRow(page, top, [['Additional underwriting / application notes', [responses.underwritingDetails, application.applicationNotes].filter(Boolean).join(' | '), contentWidth]], 30);
+          top = drawFieldRow(page, top, [['Additional underwriting / application notes', [responses.underwritingDetails, application.applicationNotes].filter(Boolean).join(' | '), contentWidth]], 26);
 
           top = drawBeneficiary(page, top);
 
@@ -1094,20 +1096,12 @@
           const page = pdf.addPage([pageWidth, pageHeight]);
           const client = data.client || {};
           const clientName = [client.firstName, client.middleName, client.lastName].filter(Boolean).join(' ');
-          const logoWidth = 78;
-          const logoHeight = 52;
-          const detailsX = margin + logoWidth + 10;
-          const logoImageWidth = 60;
-          const logoImageHeight = 40;
-          page.drawImage(logoImage, { x: margin + (logoWidth - logoImageWidth) / 2, y: pageHeight - logoHeight + (logoHeight - logoImageHeight) / 2, width: logoImageWidth, height: logoImageHeight });
-          page.drawText(`Client: ${display(clientName)}`, { x: detailsX, y: pageHeight - 22, size: 10, font: boldFont, color: border });
-          const clientDetails = `Date of birth: ${display(client.dateOfBirth)} | Phone: ${display(client.phonePrimary)}`;
-          page.drawText(clientDetails, { x: detailsX, y: pageHeight - 39, size: 8, font, color: border, maxWidth: contentWidth - logoWidth - 10 });
-          const headerTop = 58;
+          drawPageHeader(page, 'ADDITIONAL DETAILS', clientName, data.application?.applicationDate, client.callStatus);
+          let top = contentTop;
           const headerHeight = 18;
-          page.drawRectangle({ x: margin, y: pageHeight - headerTop - headerHeight, width: contentWidth, height: headerHeight, color: overflowGreen, borderColor: border, borderWidth: 0.4 });
-          page.drawText('OVERFLOW FORM', { x: margin + 5, y: pageHeight - headerTop - 12, size: 8, font: boldFont, color: plainFill });
-          let top = headerTop + headerHeight;
+          page.drawRectangle({ x: margin, y: pageHeight - top - headerHeight, width: contentWidth, height: headerHeight, color: overflowGreen, borderColor: border, borderWidth: 0.4 });
+          page.drawText('OVERFLOW FORM', { x: margin + 5, y: pageHeight - top - 12, size: 8, font: boldFont, color: plainFill });
+          top += headerHeight;
 
           const medications = (data.health?.medications || []).slice(12, 20);
           if (medications.length) {
