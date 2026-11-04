@@ -236,6 +236,7 @@
               <h2>Client information</h2>
               <label class="field">Call Status<select name="callStatus"><option value="">Select call status</option><option>Application Submitted</option><option>Contacted</option><option>Follow Up</option><option>New Lead</option><option>No Sale</option><option>Quoted</option><option>Refund Request</option></select></label>
             </div>
+            <p class="validation" id="clientNameValidation" role="alert" hidden></p>
             <div class="fields">
               <label class="field">First name<input name="firstName" autocomplete="given-name"></label>
               <label class="field">Middle name<input name="middleName"></label>
@@ -503,6 +504,7 @@
       const themeToggle = document.getElementById('themeToggle');
       const themeIcon = document.getElementById('themeIcon');
       const validationMessage = document.getElementById('validationMessage');
+      const clientNameValidation = document.getElementById('clientNameValidation');
       const beneficiaryList = document.getElementById('beneficiaryList');
       const medicationList = document.getElementById('medicationList');
       let isDirty = false;
@@ -529,7 +531,19 @@
       function markDirty() {
         isDirty = true;
         validationMessage.textContent = '';
+        clientNameValidation.textContent = '';
+        clientNameValidation.hidden = true;
         setStatus('Unsaved changes');
+      }
+
+      function cleanFileNamePart(value) {
+        const invalidCharacters = new Set(['<', '>', ':', '"', '/', '\\', '|', '?', '*']);
+        return String(value || '').trim().split('').filter(character => character.charCodeAt(0) >= 32 && !invalidCharacters.has(character)).join('').replace(/[. ]+$/g, '').trim();
+      }
+
+      function suggestedPdfFileName(firstName, lastName) {
+        const nameParts = [cleanFileNamePart(firstName), cleanFileNamePart(lastName)].filter(Boolean);
+        return nameParts.length ? `${nameParts.join('.')}.VS.pdf` : '';
       }
 
       function updateExistingCoverageFields() {
@@ -802,7 +816,7 @@
 
       function validateComplete(data) {
         const errors = [];
-        if (!data.client.firstName.trim() || !data.client.lastName.trim()) errors.push('Enter the client first and last name.');
+        if (!data.client.firstName.trim() && !data.client.lastName.trim()) errors.push('Enter a first or last name.');
         const namedBeneficiaries = data.beneficiaries.filter(item => item.fullName.trim());
         if (!namedBeneficiaries.length) errors.push('Add at least one named beneficiary.');
         for (const designation of ['Primary', 'Contingent']) {
@@ -880,7 +894,9 @@
           const logoHeight = 52;
           const headerTextX = margin + logoWidth + 10;
           page.drawRectangle({ x: margin, y: pageHeight - logoHeight, width: logoWidth, height: logoHeight, color: bandFill });
-          page.drawImage(logoImage, { x: margin, y: pageHeight - logoHeight, width: logoWidth, height: logoHeight });
+          const logoImageWidth = 60;
+          const logoImageHeight = 40;
+          page.drawImage(logoImage, { x: margin + (logoWidth - logoImageWidth) / 2, y: pageHeight - logoHeight + (logoHeight - logoImageHeight) / 2, width: logoImageWidth, height: logoImageHeight });
           page.drawText('CLIENT INFO SHEET', { x: headerTextX, y: pageHeight - 28, size: 14, font: boldFont, color: bandFill });
           page.drawText(`${label} | ${display(name)}`, { x: headerTextX, y: pageHeight - 44, size: 9, font: boldFont, color: border });
           const callStatusText = `Call Status: ${display(callStatus)}`;
@@ -1081,7 +1097,9 @@
           const logoWidth = 78;
           const logoHeight = 52;
           const detailsX = margin + logoWidth + 10;
-          page.drawImage(logoImage, { x: margin, y: pageHeight - logoHeight, width: logoWidth, height: logoHeight });
+          const logoImageWidth = 60;
+          const logoImageHeight = 40;
+          page.drawImage(logoImage, { x: margin + (logoWidth - logoImageWidth) / 2, y: pageHeight - logoHeight + (logoHeight - logoImageHeight) / 2, width: logoImageWidth, height: logoImageHeight });
           page.drawText(`Client: ${display(clientName)}`, { x: detailsX, y: pageHeight - 22, size: 10, font: boldFont, color: border });
           const clientDetails = `Date of birth: ${display(client.dateOfBirth)} | Phone: ${display(client.phonePrimary)}`;
           page.drawText(clientDetails, { x: detailsX, y: pageHeight - 39, size: 8, font, color: border, maxWidth: contentWidth - logoWidth - 10 });
@@ -1292,6 +1310,18 @@
 
       async function savePdf() {
         validationMessage.textContent = '';
+        clientNameValidation.textContent = '';
+        clientNameValidation.hidden = true;
+        const firstName = form.elements.namedItem('firstName').value;
+        const lastName = form.elements.namedItem('lastName').value;
+        const fileName = suggestedPdfFileName(firstName, lastName);
+        if (!fileName) {
+          clientNameValidation.textContent = 'Enter a first or last name before saving the PDF.';
+          clientNameValidation.hidden = false;
+          setStatus('A client name is required to save the PDF.');
+          form.elements.namedItem('firstName').focus();
+          return;
+        }
         const data = collectApplication();
         if (data.application.applicationStatus === 'Complete') {
           const errors = validateComplete(data);
@@ -1313,6 +1343,7 @@
           const savedPath = await invoke('save_pdf', {
             pdfBytes: Array.from(bytes),
             password: protectPdf ? password : null,
+            fileName,
           });
           if (!savedPath) return;
           isDirty = false;

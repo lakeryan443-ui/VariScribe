@@ -40,6 +40,7 @@ async fn save_pdf(
     app: AppHandle,
     pdf_bytes: Vec<u8>,
     password: Option<String>,
+    file_name: String,
 ) -> Result<Option<String>, String> {
     let pdf_bytes = Zeroizing::new(pdf_bytes);
     let password = password.map(Zeroizing::new);
@@ -54,7 +55,7 @@ async fn save_pdf(
         .dialog()
         .file()
         .add_filter("PDF", &["pdf"])
-        .set_file_name("VariScribe.pdf")
+        .set_file_name(&file_name)
         .blocking_save_file();
     let Some(selected) = selected else {
         return Ok(None);
