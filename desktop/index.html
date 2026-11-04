@@ -1063,7 +1063,7 @@
 
           top = drawSection(page, top, 'Financial and policy details');
           top = drawFieldRow(page, top, [['Employment status', finances.employmentStatus, 100], ['Income source', finances.incomeSource, 146], ['Monthly income ($)', finances.monthlyIncome, 104], ['Bank / credit union', finances.bankName, 126], ['Account type', finances.accountType, 80]]);
-          top = drawFieldRow(page, top, [['Draft date', finances.draftDate, 160], ['Initial payment date', finances.initialPaymentDate, 130], ['Bank available?', finances.bankAvailable, 146]]);
+          top = drawFieldRow(page, top, [['Draft date', finances.draftDate, 185], ['Initial payment date', finances.initialPaymentDate, 185], ['Bank available?', finances.bankAvailable, 186]]);
           top = drawFieldRow(page, top, [['Carrier', application.carrier, 90], ['Product', application.productName, 100], ['Policy amount ($)', application.policyCoverage, 90], ['Premium ($)', application.policyPremium, 80], ['Effective date', application.effectiveDate, 90], ['Policy number', application.policyNumber, 106]]);
           top = drawFieldRow(page, top, [['Application status', application.applicationStatus, 124], ['Agent name', application.agentName, 150], ['Intake date', application.applicationDate, 112], ['Quoted coverage ($)', coverage.quotedCoverage, 90], ['Quoted premium ($)', coverage.quotedPremium, 80]]);
         }
