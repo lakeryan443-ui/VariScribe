@@ -423,10 +423,10 @@
         </div>
       </div>
       <div class="qualifier-question">
-        <p id="under85Question">Under Age 85?</p>
-        <div class="inline-radios" role="radiogroup" aria-labelledby="under85Question">
-          <label><input type="radio" name="under85" value="yes"> Yes</label>
-          <label><input type="radio" name="under85" value="no"> No</label>
+        <p id="over85Question">Over Age 85?</p>
+        <div class="inline-radios" role="radiogroup" aria-labelledby="over85Question">
+          <label><input type="radio" name="over85" value="yes"> Yes</label>
+          <label><input type="radio" name="over85" value="no"> No</label>
         </div>
       </div>
       <div class="qualifier-question">
@@ -1144,7 +1144,7 @@
       const qualifierResultTitle = document.getElementById('qualifierResultTitle');
       const qualifierResultMessage = document.getElementById('qualifierResultMessage');
       const qualifierCancelActions = document.getElementById('qualifierCancelActions');
-      const qualifierQuestions = ['deadAir', 'under85', 'licensedState', 'programFree'];
+      const qualifierQuestions = ['deadAir', 'over85', 'licensedState', 'programFree'];
       let passwordDialogMode = 'create';
       let passwordDialogResolve;
       let passwordDialogResult;
@@ -1237,8 +1237,9 @@
 
       function updateQualifierOutcome() {
         const answers = qualifierQuestions.map(name => qualifierDialog.querySelector(`input[name="${name}"]:checked`)?.value);
-        const disqualified = answers.includes('yes');
-        const qualified = answers.every(answer => answer === 'no');
+        const [deadAir, over85, licensedState, programFree] = answers;
+        const disqualified = deadAir === 'yes' || over85 === 'yes' || licensedState === 'no' || programFree === 'yes';
+        const qualified = deadAir === 'no' && over85 === 'no' && licensedState === 'yes' && programFree === 'no';
         if (!disqualified && !qualified) {
           qualifierResult.hidden = true;
           qualifierCancelActions.hidden = false;
